@@ -6,14 +6,14 @@
 #    By: sconso <sconso@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/01/12 18:13:08 by sconso            #+#    #+#              #
-#    Updated: 2014/06/17 13:52:07 by Myrkskog         ###   ########.fr        #
+#    Updated: 2014/06/17 20:17:11 by sconso           ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
 NAME = tuto
 
 CC = gcc
-CFLAGS = -Wall -Werror -Wextra -Wno-deprecated
+CFLAGS = -Wall -Wextra -Werror -Wno-deprecated -Wno-deprecated-declarations
 DFLAGS = -pedantic -g -ggdb
 INC = -I includes/ -I libft/includes
 LFLAGS = -L libft -lft -framework GLUT -framework OpenGL
