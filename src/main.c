@@ -6,13 +6,35 @@
 /*   By: Myrkskog <marvin@42.fr>                    +#+  +:+       +#+        */
  /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/06/17 13:36:47 by Myrkskog          #+#    #+#             */
-/*   Updated: 2014/06/17 22:37:46 by sconso           ###   ########.fr       */
+/*   Updated: 2014/06/17 23:06:30 by sconso           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <GLUT/glut.h>
+#include <main.h>
 #include <stdio.h>
 #include <stdlib.h>
+
+t_cam		*cam;
+
+t_cam		*init_cam(void)
+{
+	t_cam	*cam;
+
+	cam = (t_cam *)malloc(sizeof(t_cam));
+	if (!cam)
+		exit(0);
+	cam->pos.x = 0.0f;
+	cam->pos.y = 1.0f;
+	cam->pos.z = 0.0f;
+	cam->point.x = 0.0f;
+	cam->point.y = 1.0f;
+	cam->point.z = 0.0f;
+	cam->tilt.x = 0.0f;
+	cam->tilt.y = 1.0f;
+	cam->tilt.z = 0.0f;
+	return (cam);
+}
 
 void processNormalKeys(unsigned char key, int x, int y)
 {
@@ -30,9 +52,11 @@ void renderScene(void)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glLoadIdentity();
-	gluLookAt(0.0, 0.0, zoom,
-			  0.0, 0.0,  0.0,
-			  0.0, 1.0,  0.0);
+
+	cam->pos.z = zoom;
+	gluLookAt(cam->pos.x, cam->pos.y, cam->pos.z,
+			  cam->point.x, cam->point.y, cam->point.z,
+			  cam->tilt.x, cam->tilt.y, cam->tilt.z);
 	glRotatef(angle, 0.0, 1.0, 0.0);
 
 	glBegin(GL_TRIANGLES);
@@ -88,7 +112,7 @@ int main(int argc, char **argv) {
 	glutIdleFunc(renderScene);
 	glutKeyboardFunc(processNormalKeys);
 
-
+	cam = init_cam();
 	// enter GLUT event processing cycle
 	glutMainLoop();
 	
