@@ -6,7 +6,7 @@
 /*   By: Myrkskog <marvin@42.fr>                    +#+  +:+       +#+        */
  /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/06/17 13:36:47 by Myrkskog          #+#    #+#             */
-/*   Updated: 2014/06/17 23:06:30 by sconso           ###   ########.fr       */
+/*   Updated: 2014/06/17 23:18:51 by sconso           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include <main.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
 t_cam		*cam;
 
@@ -24,9 +25,10 @@ t_cam		*init_cam(void)
 	cam = (t_cam *)malloc(sizeof(t_cam));
 	if (!cam)
 		exit(0);
+	cam->angle = 0.0f;
 	cam->pos.x = 0.0f;
 	cam->pos.y = 1.0f;
-	cam->pos.z = 0.0f;
+	cam->pos.z = 1.0f;
 	cam->point.x = 0.0f;
 	cam->point.y = 1.0f;
 	cam->point.z = 0.0f;
@@ -36,12 +38,30 @@ t_cam		*init_cam(void)
 	return (cam);
 }
 
-void processNormalKeys(unsigned char key, int x, int y)
+void	processNormalKeys(unsigned char key, int x, int y)
 {
 	(void)x;
 	(void)y;
 	if (key == 27)
 		exit(0);
+}
+
+void	processSpecialKeys(int key, int x, int y)
+{
+	(void)x;
+	(void)y;
+	if (key == GLUT_KEY_LEFT)
+	{
+		cam->angle -= 0.1f;
+		cam->point.x = sin(cam->angle);
+		cam->point.z = -cos(cam->angle);
+	}
+	else if (key == GLUT_KEY_RIGHT)
+	{
+		cam->angle += 0.1f;
+		cam->point.x = sin(cam->angle);
+		cam->point.z = -cos(cam->angle);
+	}
 }
 
 void renderScene(void)
@@ -55,7 +75,7 @@ void renderScene(void)
 
 	cam->pos.z = zoom;
 	gluLookAt(cam->pos.x, cam->pos.y, cam->pos.z,
-			  cam->point.x, cam->point.y, cam->point.z,
+			  cam->pos.x + cam->point.x, cam->point.y, cam->pos.z + cam->point.z,
 			  cam->tilt.x, cam->tilt.y, cam->tilt.z);
 	glRotatef(angle, 0.0, 1.0, 0.0);
 
@@ -77,7 +97,7 @@ void renderScene(void)
 	glVertex3f(0.0, 1.0, -1.0);
 	glEnd();
 
-	angle += 5;
+	/*	angle += 5;*/
 
 	glutSwapBuffers();
 }
@@ -111,6 +131,7 @@ int main(int argc, char **argv) {
 	glutReshapeFunc(changeSize);
 	glutIdleFunc(renderScene);
 	glutKeyboardFunc(processNormalKeys);
+	glutSpecialFunc(processSpecialKeys);
 
 	cam = init_cam();
 	// enter GLUT event processing cycle

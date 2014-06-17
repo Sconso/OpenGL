@@ -6,7 +6,7 @@
 /*   By: sconso <sconso@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/06/17 23:00:51 by sconso            #+#    #+#             */
-/*   Updated: 2014/06/17 23:02:27 by sconso           ###   ########.fr       */
+/*   Updated: 2014/06/17 23:09:59 by sconso           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ typedef struct		s_vertex
 
 typedef struct		s_cam
 {
+	float			angle;
 	t_vertex		pos;
 	t_vertex		point;
 	t_vertex		tilt;
