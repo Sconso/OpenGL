@@ -6,7 +6,7 @@
 /*   By: Myrkskog <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/06/17 13:36:47 by Myrkskog          #+#    #+#             */
-/*   Updated: 2014/06/17 13:52:59 by Myrkskog         ###   ########.fr       */
+/*   Updated: 2014/06/17 14:08:24 by Myrkskog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,21 @@ void renderScene(void) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glBegin(GL_TRIANGLES);
-	glVertex3f(-0.5,-0.5,0.0);
+	glVertex3f(0.0,-1.0,0.0);
+	glVertex3f(1.0,-1.0,0.0);
 	glVertex3f(0.5,0.0,0.0);
-	glVertex3f(0.0,0.5,0.0);
+	glEnd();
+
+	glBegin(GL_TRIANGLES);
+	glVertex3f(-1.0,-1.0,0.0);
+	glVertex3f(0.0,-1.0,0.0);
+	glVertex3f(-0.5,0.0,0.0);
+	glEnd();
+
+	glBegin(GL_TRIANGLES);
+	glVertex3f(-0.5,0.0,0.0);
+	glVertex3f(0.5,0.0,0.0);
+	glVertex3f(0.0,1.0,0.0);
 	glEnd();
 
 	glutSwapBuffers();
