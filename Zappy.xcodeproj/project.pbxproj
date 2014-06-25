@@ -1,0 +1,141 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXFileReference section */
+		C8EB8750195471B200D1B3FE /* includes */ = {isa = PBXFileReference; lastKnownFileType = folder; path = includes; sourceTree = "<group>"; };
+		C8EB8752195471B200D1B3FE /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		C8EB8753195471B200D1B3FE /* obj */ = {isa = PBXFileReference; lastKnownFileType = folder; path = obj; sourceTree = "<group>"; };
+		C8EB8754195471B200D1B3FE /* src */ = {isa = PBXFileReference; lastKnownFileType = folder; path = src; sourceTree = "<group>"; };
+		C8EB8755195471B200D1B3FE /* tuto */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = tuto; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		C8EB874A195471B200D1B3FE = {
+			isa = PBXGroup;
+			children = (
+				C8EB8750195471B200D1B3FE /* includes */,
+				C8EB8754195471B200D1B3FE /* src */,
+				C8EB8752195471B200D1B3FE /* Makefile */,
+				C8EB8753195471B200D1B3FE /* obj */,
+				C8EB8755195471B200D1B3FE /* tuto */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXLegacyTarget section */
+		C8EB874F195471B200D1B3FE /* Zappy */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "$(ACTION)";
+			buildConfigurationList = C8EB8756195471B200D1B3FE /* Build configuration list for PBXLegacyTarget "Zappy" */;
+			buildPhases = (
+			);
+			buildToolPath = /usr/bin/make;
+			buildWorkingDirectory = /Users/Myrkskog/Code/Unix/S2/Zappy;
+			dependencies = (
+			);
+			name = Zappy;
+			passBuildSettingsInEnvironment = 1;
+			productName = Zappy;
+		};
+/* End PBXLegacyTarget section */
+
+/* Begin PBXProject section */
+		C8EB874B195471B200D1B3FE /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0510;
+			};
+			buildConfigurationList = C8EB874E195471B200D1B3FE /* Build configuration list for PBXProject "Zappy" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = C8EB874A195471B200D1B3FE;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				C8EB874F195471B200D1B3FE /* Zappy */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin XCBuildConfiguration section */
+		C8EB874C195471B200D1B3FE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		C8EB874D195471B200D1B3FE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		C8EB8757195471B200D1B3FE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DEBUGGING_SYMBOLS = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = Zappy;
+			};
+			name = Debug;
+		};
+		C8EB8758195471B200D1B3FE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = Zappy;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		C8EB874E195471B200D1B3FE /* Build configuration list for PBXProject "Zappy" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C8EB874C195471B200D1B3FE /* Debug */,
+				C8EB874D195471B200D1B3FE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C8EB8756195471B200D1B3FE /* Build configuration list for PBXLegacyTarget "Zappy" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C8EB8757195471B200D1B3FE /* Debug */,
+				C8EB8758195471B200D1B3FE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = C8EB874B195471B200D1B3FE /* Project object */;
+}
