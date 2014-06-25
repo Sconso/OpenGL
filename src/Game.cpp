@@ -1,0 +1,217 @@
+// ************************************************************************** //
+//                                                                            //
+//                                                        :::      ::::::::   //
+//   Game.cpp                                           :+:      :+:    :+:   //
+//                                                    +:+ +:+         +:+     //
+//   By: Myrkskog <marvin@42.fr>                    +#+  +:+       +#+        //
+//                                                +#+#+#+#+#+   +#+           //
+//   Created: 2014/06/20 15:58:02 by Myrkskog          #+#    #+#             //
+//   Updated: 2014/06/20 15:58:05 by Myrkskog         ###   ########.fr       //
+//                                                                            //
+// ************************************************************************** //
+
+#include <gfx.h>
+#include <Game.h>
+#include <Square.h>
+#include <Team.h>
+#include <vector>
+#include <string>
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+Game::Game(int width, int height) : m_width(width), m_height(height), m_time(0)
+{
+    m_map = new Square* [height];
+    if (m_map)
+    {
+        for (int i = 0; i < height; ++i)
+        {
+            m_map[i] = new Square[width];
+            cout << ".";
+        }
+        cout << endl << "Map succefully created ! (";
+        cout << width << " x " << height << ")" << endl;
+    }
+}
+
+Game::~Game()
+{
+    for (int i = 0; i < m_height; ++i)
+        delete [] m_map[i];
+    delete [] m_map;
+
+    map<string, Team*>::iterator it = m_teams.begin();
+    if (it != m_teams.end())
+    {
+        delete it->second;
+        m_teams.erase(it);
+    }
+}
+
+void Game::getSquare(const int x, const int y) const
+{
+    cout << "Ressources présentes sur la case (" << x << ", " << y << ") : " << endl;
+    m_map[y][x].getResources();
+}
+
+void Game::getSquare(const int x, const int y, int tab[]) const
+{
+    m_map[y][x].getResources(tab);
+}
+
+void Game::setSquare(const int x, const int y, vector<string> &str)
+{
+    if (x >= m_width || y >= m_height || x < 0 || y < 0)
+        ft_exit("Bad coordinates.");
+    m_map[y][x].setResources(str);
+    cout << "Resources succefully added on " << x << ", " << y << " !" << endl;
+}
+
+void Game::getInventory(int nb)
+{
+    m_players[nb]->getInventory();
+}
+
+void Game::getInventory(int nb, int tab[])
+{
+    m_players[nb]->getInventory(tab);
+}
+
+void Game::setInventory(vector<string> &str)
+{
+    string tmp = &str[1][1];
+    int nb = atoi(tmp.c_str());
+    
+    m_players[nb]->setInventory(str);
+}
+
+int Game::getWidth() const
+{
+	return (m_width);
+}
+
+int Game::getHeight() const
+{
+	return (m_height);
+}
+
+int Game::getTime() const
+{
+    return (m_time);
+}
+
+void Game::setTime(int time)
+{
+    m_time = time;
+    cout << "Time set to 1s / " << m_time << endl;
+}
+
+void Game::addTeam(string name)
+{
+    Team *team = NULL;
+    
+    team = new Team(name);
+    m_teams[name] = team;
+}
+
+void Game::listTeams() const
+{
+    map<string, Team *>::const_iterator it;
+    int i = 0;
+
+    cout << "TEAMS :" << endl;
+    for (it = m_teams.begin(); it != m_teams.end(); ++it, ++i)
+        cout << "Team n*" << i << ": " << (*it).second->getName() << endl;
+}
+
+string Game::getTeam(int nb)
+{
+    return (m_players[nb]->getTeam());
+}
+
+
+void Game::addPlayer(vector<string> &str)
+{
+    string tmp = &str[1][1];
+    int nb = atoi(tmp.c_str());
+    int x = atoi(str[2].c_str());
+    int y = atoi(str[3].c_str());
+    int orientation = atoi(str[4].c_str());
+    int level = atoi(str[5].c_str());
+    Team *team = m_teams[str[6]];
+    m_players[nb] = new Player(nb, x, y, orientation, level, team);
+    m_teams[str[6]]->addPlayer(m_players[nb]);
+    m_map[y][x].addPlayer(m_players[nb]);
+}
+
+void Game::listPlayers() const
+{
+    map<int, Player*>::const_iterator it;
+    
+    for (it = m_players.begin(); it != m_players.end(); ++it)
+        (*it).second->getPlayer();
+}
+
+void Game::listPlayers(int x, int y) const
+{
+    cout << "Players on square (" << x << ", " << y << ") :" << endl;
+    m_map[y][x].listPlayers();
+}
+
+void Game::listPlayers(string name)
+{
+    map<string, Team *>::iterator it;
+    
+    it = m_teams.find(name);
+    if (it == m_teams.end())
+        cout << "La team " << name << " n'existe pas." << endl;
+    else
+        m_teams[name]->listPlayers();
+}
+
+map<int, Player *> Game::getPlayers(int x, int y) const
+{
+    return (m_map[y][x].getPlayers());
+}
+
+void Game::movePlayer(vector<string> &str)
+{
+    string tmp = &str[1][1];
+    int nb = atoi(tmp.c_str());
+    int x = atoi(str[2].c_str());
+    int y = atoi(str[3].c_str());
+    int orientation = atoi(str[4].c_str());
+    
+    m_map[m_players[nb]->getY()][m_players[nb]->getX()].removePlayer(m_players[nb]);
+    m_map[y][x].addPlayer(m_players[nb]);
+    m_players[nb]->move(x, y, orientation);
+
+    cout << "Player " << nb << " moved to (" << x << ", " << y << ")." << endl;
+}
+
+void Game::setLevel(vector<string> &str)
+{
+    string tmp = &str[1][1];
+    int nb = atoi(tmp.c_str());
+    int level = atoi(str[2].c_str());
+    
+    m_players[nb]->setLevel(level);
+}
+
+void Game::broadcast(vector<string> &str)
+{
+    string tmp = &str[1][1];
+    string msg;
+    int nb = atoi(tmp.c_str());
+    
+    for (unsigned long i = 2; i < str.size(); ++i)
+    {
+        if (i > 2)
+            msg += " ";
+        msg += str[i];
+    }
+    
+    m_players[nb]->talk(msg);
+}
