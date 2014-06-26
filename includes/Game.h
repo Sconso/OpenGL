@@ -51,6 +51,7 @@ class Game
     std::map<int, Player *> getPlayers(int x, int y) const;
     std::map<std::string, Team *> getTeams(void) const;
     void movePlayer(std::vector<std::string> &str);
+    void starvePlayers(void);
     void setLevel(std::vector<std::string> &str);
     int getLevel(int nb);
     void broadcast(std::vector<std::string> &str);

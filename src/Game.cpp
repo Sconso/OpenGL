@@ -219,6 +219,14 @@ void Game::movePlayer(vector<string> &str)
     cout << "Player " << nb << " moved to (" << x << ", " << y << ")." << endl;
 }
 
+void Game::starvePlayers(void)
+{
+    map<int, Player *>::iterator it;
+    
+    for (it = m_players.begin(); it != m_players.end(); ++it)
+        it->second->starve();
+}
+
 void Game::setLevel(vector<string> &str)
 {
     string tmp = &str[1][1];

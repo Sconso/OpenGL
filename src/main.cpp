@@ -48,39 +48,43 @@ int			main(int ac, char **av)
 	Game            *game = NULL;
     vector<string>  elems;
     
+    if (ac < 3)
+    {
+        cout << "Usage : " << av[0] << " <port> [hostname]" << endl;
+        return (1);
+    }
+    
 	game = new Game(20, 20);
-    game->setTime(100);
-    game->addTeam("Blabla");
-    game->addTeam("LesConnards");
-    game->addTeam("Banane");
+    game->setTime(1);
+    game->addTeam("sconso");
+    game->addTeam("gpetrov");
+    game->addTeam("ebaudet");
     game->listTeams();
 
-    split("lol #1 2 3 2 1 LesConnards", ' ', elems);
+    split("lol #1 2 3 2 1 gpetrov", ' ', elems);
     game->addPlayer(elems);
     elems.clear();
-    split("lol #2 3 5 1 5 Blabla", ' ', elems);
+    split("lol #2 3 5 1 5 sconso", ' ', elems);
     game->addPlayer(elems);
     elems.clear();
-    split("lol #3 2 5 2 5 Blabla", ' ', elems);
+    split("lol #3 2 5 2 5 sconso", ' ', elems);
     game->addPlayer(elems);
     elems.clear();
-    split("lol #42 14 5 1 5 Blabla", ' ', elems);
+    split("lol #42 14 5 1 5 gpetrov", ' ', elems);
     game->addPlayer(elems);
     elems.clear();
-    split("lol #4 10 13 2 1 Banane", ' ', elems);
+    split("lol #4 10 13 2 1 ebaudet", ' ', elems);
     game->addPlayer(elems);
     elems.clear();
-    split("lol #5 12 9 2 1 Banane", ' ', elems);
+    split("lol #5 12 9 2 1 ebaudet", ' ', elems);
     game->addPlayer(elems);
     elems.clear();
-    split("lol #6 2 15 2 1 Banane", ' ', elems);
+    split("lol #6 2 15 2 1 ebaudet", ' ', elems);
     game->addPlayer(elems);
     elems.clear();
     
-    split("pdi #6\n", ' ', elems);
-    manager(elems, game);
-    
-    game->listPlayers("Blabla");
+  
+    game->listPlayers("sconso");
     game->listPlayers("Blabokhfa");
     game->listPlayers("LesConnards");
 

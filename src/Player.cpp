@@ -90,6 +90,11 @@ void Player::setInventory(vector<string> &str)
     m_inventory->setInventory(str);
 }
 
+void Player::starve(void)
+{
+    m_inventory->setFood(m_inventory->getFood() - 1);
+}
+
 void Player::talk(string msg) const
 {
     cout << "Player " << m_nb << " says : \"" << msg << "\"" << endl;

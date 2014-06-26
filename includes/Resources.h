@@ -25,6 +25,8 @@ class Resources
     void setInventory(std::vector<std::string> &str);
     void getResources() const;
     void getResources(int tab[]) const;
+    int getFood(void) const;
+    void setFood(int food);
     
     private:
     int m_resources[8];

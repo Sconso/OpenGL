@@ -64,6 +64,7 @@ class Render
     /*       CALCULATIONS       */
     /****************************/
     static void computeFps(void);
+    static void computeTime(void);
     
     private:
     static float m_rotX;
@@ -86,6 +87,11 @@ class Render
     static int m_timebase;
     static int m_frame;
     static std::string m_fps;
+    
+    /* TME */
+    static int mt_time;
+    static int mt_timebase;
+    static int mt_frame;
     
     static int m_showInventory;
 };

@@ -31,6 +31,7 @@ class Player
     void setLevel(int level);
     void getInventory() const;
     void getInventory(int tab[]) const;
+    void starve(void);
     void setInventory(std::vector<std::string> &str);
     void talk(std::string msg) const;
       

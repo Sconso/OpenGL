@@ -65,3 +65,13 @@ void Resources::getResources(int tab[]) const
     tab[5] = m_resources[5];
     tab[6] = m_resources[6];
 }
+
+int Resources::getFood(void) const
+{
+    return (m_resources[0]);
+}
+
+void Resources::setFood(int food)
+{
+    m_resources[0] = food;
+}

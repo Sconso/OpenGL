@@ -39,6 +39,10 @@ int Render::m_timebase = 0;
 int Render::m_frame = 0;
 string Render::m_fps = "FPS: ";
 
+int Render::mt_time = 0;
+int Render::mt_timebase = 0;
+int Render::mt_frame = 0;
+
 int Render::m_showInventory = -1;
 
 void Render::newWindow(int ac, char **av, int w, int h, string name, Game *game)
@@ -122,6 +126,7 @@ void Render::renderScene(void)
     static int resZ = rand() % 200;
     
     computeFps();
+    computeTime();
     processKeyboardEvents();
     glClearStencil(0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
@@ -161,16 +166,20 @@ void Render::renderScene(void)
                     float posX;
                     float posZ;
                 
-                    posX = ((resX + (x * y * i)) % 200 - 100) * 1.0 / 500;
-                    posZ = ((resZ + (x + y / (i + 1))) % 200 - 100) * 1.0 / 500;
+                    posX = ((resX * i) % 200 - 100) % 100 * 1.0 / 100;
+                    posZ = ((resZ * i) % 200 - 100) % 100 * 1.0 / 100;
 
+                    glPushMatrix();
+                    
                     glTranslatef(posX, 0, posZ);
                     glColor3ub(255 % (i + 1), i * 100 % 255, i * i * 10 % 255);
                 
                     GLUquadric* params = gluNewQuadric();
                     gluQuadricDrawStyle(params,GLU_FILL);
-                    gluSphere(params,0.2, i + 3, i + 3);
+                    gluSphere(params,0.2, i + 3, i + 2);
                     gluDeleteQuadric(params);
+                    
+                    glPopMatrix();
                 }
             }
             glPopMatrix();
@@ -379,8 +388,6 @@ void Render::mouseButton(int button, int state, int x, int y)
     if (button == 0)
     {
         glReadPixels(x, height - y - 1, 1, 1, GL_STENCIL_INDEX, GL_UNSIGNED_INT, &index);
-        cout << "Click on pixel (" << x << ", " << y << "), Player n*" << index - 1 << endl;
-
         m_showInventory = (index == 0 ? -1 : index - 1);
     }
     else if (button == 2)
@@ -488,6 +495,18 @@ void Render::computeFps(void)
         m_fps += to_string(m_frame);
 		m_timebase = m_time;
 		m_frame = 0;
+	}
+}
+
+void Render::computeTime(void)
+{
+    ++mt_frame;
+    mt_time = glutGet(GLUT_ELAPSED_TIME);
+    if (mt_time - mt_timebase > 1000 / m_game->getTime())
+    {
+        m_game->starvePlayers();
+		mt_timebase = mt_time;
+		mt_frame = 0;
 	}
 }
 
