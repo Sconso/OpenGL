@@ -25,11 +25,18 @@ Game* Render::m_game = NULL;
 float Render::m_rotX = 10;
 float Render::m_rotY = 30;
 float Render::m_rotZ = 0;
+float Render::m_posX = 0;
+float Render::m_posY = 0;
+float Render::m_posZ = 0;
 
 char Render::m_up = 0;
 char Render::m_down = 0;
 char Render::m_left = 0;
 char Render::m_right = 0;
+char Render::m_moveLeft = 0;
+char Render::m_moveRight = 0;
+char Render::m_moveUp = 0;
+char Render::m_moveDown = 0;
 char Render::m_zoomIn = 0;
 char Render::m_zoomOut = 0;
 
@@ -145,6 +152,7 @@ void Render::renderScene(void)
     glRotatef(m_rotY, 0, 1, 0);
     glRotatef(m_rotZ, 0, 0, 1);
     
+    glTranslatef(m_posX, 0, m_posZ);
     glTranslatef(0, 0, (height / 2 - height) * 2 + 1);
     for (int y = 0; y < height; ++y)
     {
@@ -401,6 +409,14 @@ void Render::mouseButton(int button, int state, int x, int y)
 
 void Render::processKeyboardEvents(void)
 {
+    if (m_moveLeft)
+        m_posX--;
+    if (m_moveRight)
+        m_posX++;
+    if (m_moveUp)
+        m_posZ--;
+    if (m_moveDown)
+        m_posZ++;
 	if (m_left)
         m_rotY = (m_rotY - 1 < 0 ? 359 : m_rotY - 1);
     if (m_right)
@@ -428,6 +444,14 @@ void Render::processNormalKeys(unsigned char key, int x, int y)
         m_zoomIn = 1;
     else if (key == '-')
         m_zoomOut = 1;
+    else if (key == 'w')
+        m_moveUp = 1;
+    else if (key == 's')
+        m_moveDown = 1;
+    else if (key == 'a')
+        m_moveLeft = 1;
+    else if (key == 'd')
+        m_moveRight = 1;
 }
 
 void Render::processSpecialKeys(int key, int x, int y)
@@ -454,6 +478,14 @@ void Render::processUpKeys(unsigned char key, int x, int y)
         m_zoomIn = 0;
     if (key == '-')
         m_zoomOut = 0;
+    if (key == 'w')
+        m_moveUp = 0;
+    if (key == 's')
+        m_moveDown = 0;
+    if (key == 'a')
+        m_moveLeft = 0;
+    if (key == 'd')
+        m_moveRight = 0;
 }
 
 void Render::processUpSpecialKeys(int key, int x, int y)
@@ -504,7 +536,16 @@ void Render::computeTime(void)
     mt_time = glutGet(GLUT_ELAPSED_TIME);
     if (mt_time - mt_timebase > 1000 / m_game->getTime())
     {
+        vector<string> move;
+        
+        move.push_back("lol");
+        move.push_back("#42");
+        move.push_back(to_string(rand() % 20));
+        move.push_back(to_string(rand() % 20));
+        move.push_back("1");
+        m_game->movePlayer(move);
         m_game->starvePlayers();
+        
 		mt_timebase = mt_time;
 		mt_frame = 0;
 	}

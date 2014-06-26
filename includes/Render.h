@@ -70,11 +70,18 @@ class Render
     static float m_rotX;
     static float m_rotY;
     static float m_rotZ;
+    static float m_posX;
+    static float m_posY;
+    static float m_posZ;
     
     static char m_up;
     static char m_down;
     static char m_left;
     static char m_right;
+    static char m_moveLeft;
+    static char m_moveRight;
+    static char m_moveUp;
+    static char m_moveDown;
     static char m_zoomIn;
     static char m_zoomOut;
     

@@ -48,6 +48,7 @@ class Game
     void listPlayers() const;
     void listPlayers(int x, int y) const;
     void listPlayers(std::string name);
+    Player *getPlayer(int nb) const;
     std::map<int, Player *> getPlayers(int x, int y) const;
     std::map<std::string, Team *> getTeams(void) const;
     void movePlayer(std::vector<std::string> &str);

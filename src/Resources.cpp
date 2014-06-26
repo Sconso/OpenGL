@@ -73,5 +73,6 @@ int Resources::getFood(void) const
 
 void Resources::setFood(int food)
 {
-    m_resources[0] = food;
+    if (food >= 0)
+        m_resources[0] = food;
 }

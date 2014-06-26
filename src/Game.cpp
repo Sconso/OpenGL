@@ -193,6 +193,17 @@ void Game::listPlayers(string name)
         m_teams[name]->listPlayers();
 }
 
+Player *Game::getPlayer(int nb) const
+{
+    map<int, Player *>::const_iterator it;
+    
+    it = m_players.find(nb);
+    if (it != m_players.end())
+        return (it->second);
+    else
+        return (NULL);
+}
+
 map<int, Player *> Game::getPlayers(int x, int y) const
 {
     return (m_map[y][x].getPlayers());
