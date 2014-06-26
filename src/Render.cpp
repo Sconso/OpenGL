@@ -11,9 +11,9 @@
 // ************************************************************************** //
 
 #include <Render.h>
+#include <gfx.h>
 #include <ctime>
 #include <iostream>
-#include <gfx.h>
 #include <map>
 #include <algorithm>
 
@@ -131,6 +131,7 @@ void Render::renderScene(void)
     static int resX = rand() % 200;
     static int resZ = rand() % 200;
     
+    askServer(m_game);
     computeFps();
     computeTime();
     processKeyboardEvents();

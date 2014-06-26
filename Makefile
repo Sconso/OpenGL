@@ -6,11 +6,11 @@
 #    By: sconso <sconso@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/01/12 18:13:08 by sconso            #+#    #+#              #
-#    Updated: 2014/06/25 21:53:42 by sconso           ###   ########.fr        #
+#    Updated: 2014/06/26 22:16:22 by sconso           ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
-NAME = tuto
+NAME = gfx
 
 CC = g++
 CFLAGS = -Wall -Werror -Wextra -Wno-deprecated -Wno-deprecated-declarations \

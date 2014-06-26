@@ -132,6 +132,31 @@ Game        *initGame(int ac, char **av)
     return (game);
 }
 
+void        askServer(Game *game)
+{
+    int             sock;
+    int             sel;
+    fd_set          read;
+    vector<string>  elems;
+    string          str;
+    
+    sock = game->getSocket();
+    FD_ZERO(&read);
+    FD_SET(sock, &read);
+    
+    if ((sel = select(sock + 1, &read, NULL, NULL, NULL)) > 0)
+    {
+        read_server(sock, str);
+        split(str, ' ', elems);
+        manager(elems, game);
+    }
+    if (sel == -1)
+    {
+        cout << "\033[31mServer seems to be closed, exiting.\033[0m" << endl;
+        exit(0);
+    }
+}
+
 int			main(int ac, char **av)
 {
 	Game            *game = NULL;

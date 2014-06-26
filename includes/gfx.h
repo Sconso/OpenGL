@@ -21,6 +21,11 @@
 # define BUF_SIZE (1024)
 
 /*
+ ** main.c
+ */
+void askServer(Game *game);
+
+/*
 ** ft_errors
 */
 void    ft_exit(std::string str);
