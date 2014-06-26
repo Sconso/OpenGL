@@ -44,6 +44,7 @@ class Game
     void listTeams() const;
     std::string getTeam(int nb);
     void addPlayer(std::vector<std::string> &str);
+    void removePlayer(std::vector<std::string> &str);
     void listPlayers() const;
     void listPlayers(int x, int y) const;
     void listPlayers(std::string name);

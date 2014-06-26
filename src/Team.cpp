@@ -31,6 +31,14 @@ void Team::addPlayer(Player *player)
     m_players[player->getNb()] = player;
 }
 
+void Team::removePlayer(int nb)
+{
+    map<int, Player *>::iterator it;
+    
+    it = m_players.find(nb);
+    m_players.erase(nb);
+}
+
 void Team::listPlayers() const
 {
     map<int, Player *>::const_iterator it;

@@ -23,6 +23,7 @@ class Team
     Team(std::string name);
     std::string getName() const;
     void addPlayer(Player *player);
+    void removePlayer(int nb);
     void listPlayers() const;
     int getPoints() const;
       

@@ -20,6 +20,29 @@
 
 using namespace std;
 
+void        manager(vector<string> &msg, Game *game)
+{
+    if (msg[0] == "bct")
+        game->setSquare(atoi(msg[1].c_str()), atoi(msg[2].c_str()), msg);
+    else if (msg[0] == "tna")
+        game->listPlayers(msg[1]);
+    else if (msg[0] == "pnw")
+        game->addPlayer(msg);
+    else if (msg[0] == "ppo")
+        game->movePlayer(msg);
+    else if (msg[0] == "plv")
+        game->setLevel(msg);
+    else if (msg[0] == "pin")
+        game->setInventory(msg);
+    else if (msg[0] == "pbc")
+        game->broadcast(msg);
+    else if (msg[0] == "pdi")
+        game->removePlayer(msg);
+    else if (msg[0] == "sgt")
+        game->setTime(atoi(msg[1].c_str()));
+    msg.clear();
+}
+
 int			main(int ac, char **av)
 {
 	Game            *game = NULL;
@@ -53,6 +76,9 @@ int			main(int ac, char **av)
     split("lol #6 2 15 2 1 Banane", ' ', elems);
     game->addPlayer(elems);
     elems.clear();
+    
+    split("pdi #6\n", ' ', elems);
+    manager(elems, game);
     
     game->listPlayers("Blabla");
     game->listPlayers("Blabokhfa");

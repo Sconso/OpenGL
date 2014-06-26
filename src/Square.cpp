@@ -39,6 +39,14 @@ void Square::addPlayer(Player *player)
     m_players[player->getNb()] = player;
 }
 
+void Square::removePlayer(int nb)
+{
+    map<int, Player *>::iterator it;
+    
+    it = m_players.find(nb);
+    m_players.erase(nb);
+}
+
 void Square::removePlayer(Player *player)
 {
     map<int, Player *>::iterator it;

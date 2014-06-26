@@ -26,6 +26,7 @@ class Square
     void getResources(int tab[]) const;
     void setResources(std::vector<std::string> &str);
     void addPlayer(Player *player);
+    void removePlayer(int nb);
     void removePlayer(Player *player);
     void listPlayers(void) const;
     std::map<int, Player *> getPlayers(void) const;

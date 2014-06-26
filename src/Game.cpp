@@ -146,6 +146,28 @@ void Game::addPlayer(vector<string> &str)
     m_map[y][x].addPlayer(m_players[nb]);
 }
 
+void Game::removePlayer(vector<string> &str)
+{
+    map<int, Player *>::iterator it;
+    string tmp = &str[1][1];
+    int nb = atoi(tmp.c_str());
+    
+    it = m_players.find(nb);
+    if (it != m_players.end())
+    {
+        string team = it->second->getTeam();
+        int x = it->second->getX();
+        int y = it->second->getY();
+        
+        cout << "Player " << nb << " is dead ..." << endl;
+        
+        m_teams[team]->removePlayer(nb);
+        m_map[y][x].removePlayer(nb);
+        delete it->second;
+        m_players.erase(it);
+    }
+}
+
 void Game::listPlayers() const
 {
     map<int, Player*>::const_iterator it;
