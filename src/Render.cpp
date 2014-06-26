@@ -16,7 +16,6 @@
 #include <iostream>
 #include <gfx.h>
 #include <map>
-#include <algorithm>
 
 using namespace std;
 
@@ -109,7 +108,7 @@ void Render::changeSize(int w, int h)
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glViewport(0, 0, w, h);
-	gluPerspective(25, ratio, 1, 1000);
+	gluPerspective(45, ratio, 1, 1000);
 	glMatrixMode(GL_MODELVIEW);
 }
 
@@ -124,7 +123,7 @@ void Render::renderScene(void)
     computeFps();
     processKeyboardEvents();
     glClearStencil(0);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
     glEnable(GL_STENCIL_TEST);
     glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
@@ -183,9 +182,9 @@ void Render::renderScene(void)
             {
                 glStencilFunc(GL_ALWAYS, (*it).second->getNb() + 1, -1);
                 drawPlayer((*it).second->getTeam(), (*it).second->getNb());
-                glStencilFunc(GL_ALWAYS, 0, -1);
             }
-            
+            glStencilFunc(GL_ALWAYS, 0, -1);
+
             glTranslatef(2, 0, 0);
         }
         glPopMatrix();
@@ -202,7 +201,6 @@ void Render::renderScene(void)
     }
     if (m_showInventory >= 0)
         drawInventory();
-    drawPoints();
     
     restorePerspectiveProjection();
     glPopMatrix();
@@ -211,7 +209,7 @@ void Render::renderScene(void)
 	glutSwapBuffers();
 }
 
-void Render::teamColor(string team, int nb)
+void Render::drawPlayer(string team, int nb)
 {
     int color = 0;
     unsigned char r;
@@ -221,27 +219,22 @@ void Render::teamColor(string team, int nb)
     for (unsigned long i = 0; i < team.size(); ++i)
         color = team[i] + ((color << 5) - color);
     
+    glPushMatrix();
+    
+    glTranslatef(0, 1, 0);
+    glRotatef(-90, 1, 0, 0);
+
     r = (color >> 16) & 0xFF;
     g = (color >> 8) & 0xFF;
     b = color & 0xFF;
-    if (nb >= 0 && m_showInventory >= 0 && nb == m_showInventory)
+    if (m_showInventory >= 0 && nb == m_showInventory)
     {
         r = (r >= 155 ? 255 : r + 100);
         g = (g >= 155 ? 255 : g + 100);
         b = (b >= 155 ? 255 : b + 100);
     }
     glColor3ub(r, g, b);
-}
-
-void Render::drawPlayer(string team, int nb)
-{
     
-    glPushMatrix();
-    
-    glTranslatef(0, 1, 0);
-    glRotatef(-90, 1, 0, 0);
-    
-    teamColor(team, nb);
     GLUquadric* params = gluNewQuadric();
     gluQuadricDrawStyle(params,GLU_FILL);
     gluCylinder(params, 0.2, 0.05, 1.5, 20, 1);
@@ -286,12 +279,6 @@ void Render::drawInventory(void)
     str += m_game->getTeam(m_showInventory);
     renderBitmapString(5, textY, GLUT_BITMAP_HELVETICA_12, str);
     textY += 15;
-
-    str = "Level: ";
-    str += to_string(m_game->getLevel(m_showInventory));
-    renderBitmapString(5, textY, GLUT_BITMAP_HELVETICA_12, str);
-    textY += 15;
-
     
     str = "Nourriture: ";
     str += to_string(tab[0]);
@@ -326,47 +313,6 @@ void Render::drawInventory(void)
     str = "Thystame: ";
     str += to_string(tab[6]);
     renderBitmapString(5, textY, GLUT_BITMAP_HELVETICA_12, str);
-}
-
-void Render::drawPoints(void)
-{
-    map<string, Team *> teamsMap;
-    map<string, Team *>::iterator it;
-    vector<Team *> teams;
-    vector<Team *>::iterator it2;
-    string str;
-    string name;
-    int width = glutGet(GLUT_WINDOW_WIDTH);
-    int points;
-    int textY = 15;
-
-    teamsMap = m_game->getTeams();
-    
-    for (it = teamsMap.begin(); it != teamsMap.end(); ++it)
-        teams.push_back((*it).second);
-    
-    sort(teams.begin(), teams.end(), [](Team *a, Team *b){return a->getPoints() > b->getPoints();});
-    
-    for (it2 = teams.begin(); it2 != teams.end(); ++it2)
-    {
-        points = (*it2)->getPoints();
-        name = (*it2)->getName();
-        
-        teamColor(name, -1);
-        glLineWidth(18);
-        glRasterPos3f(width - 200, textY - 6, 0);
-        glBegin(GL_LINES);
-        glVertex3f(width - 100, textY - 6, -0.1);
-        glVertex3f(width - 100 + points, textY - 6, -0.1);
-        glEnd();
-        glLineWidth(1);
-
-        str = name;
-        str += " = " + to_string(points) + " point" + (points > 1 ? "s" : "");
-        renderBitmapString(width - 180 - (name.size() * 7), textY, GLUT_BITMAP_HELVETICA_12, str);
-        textY += 15;
-    }
-    
 }
 
 void Render::mouseButton(int button, int state, int x, int y)
