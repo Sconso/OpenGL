@@ -13,6 +13,7 @@
 #ifndef GFX_H
 # define GFX_H
 
+#include <Game.h>
 #include <iostream>
 #include <vector>
 #include <string>
