@@ -39,3 +39,13 @@ void Team::listPlayers() const
     for (it = m_players.begin(); it != m_players.end(); ++it)
         (*it).second->getPlayer();
 }
+
+int Team::getPoints() const
+{
+    map<int, Player *>::const_iterator it;
+    int points = 0;
+    
+    for (it = m_players.begin(); it != m_players.end(); ++it)
+        points += (*it).second->getLevel();
+    return (points);
+}

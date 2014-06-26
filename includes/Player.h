@@ -27,12 +27,13 @@ class Player
     int getY() const;
     std::string getTeam() const;
     void move(int x, int y, int orientation);
+    int getLevel(void) const;
     void setLevel(int level);
     void getInventory() const;
     void getInventory(int tab[]) const;
     void setInventory(std::vector<std::string> &str);
     void talk(std::string msg) const;
-    
+      
     private:
     int m_nb;
     int m_x;

@@ -176,6 +176,12 @@ map<int, Player *> Game::getPlayers(int x, int y) const
     return (m_map[y][x].getPlayers());
 }
 
+map<string, Team *> Game::getTeams(void) const
+{
+    return (m_teams);
+}
+
+
 void Game::movePlayer(vector<string> &str)
 {
     string tmp = &str[1][1];
@@ -198,6 +204,11 @@ void Game::setLevel(vector<string> &str)
     int level = atoi(str[2].c_str());
     
     m_players[nb]->setLevel(level);
+}
+
+int Game::getLevel(int nb)
+{
+    return (m_players[nb]->getLevel());
 }
 
 void Game::broadcast(vector<string> &str)

@@ -33,8 +33,10 @@ class Render
     /****************************/
     /*          DRAWING         */
     /****************************/
+    static void teamColor(std::string team, int nb);
     static void drawPlayer(std::string team, int nb);
     static void drawInventory(void);
+    static void drawPoints(void);
     
     /****************************/
     /*        PROCESSING        */

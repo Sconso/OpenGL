@@ -64,6 +64,11 @@ void Player::move(int x, int y, int orientation)
     m_orientation = orientation;
 }
 
+int Player::getLevel(void) const
+{
+    return (m_level);
+}
+
 void Player::setLevel(int level)
 {
     m_level = level;

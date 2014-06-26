@@ -25,7 +25,7 @@ int			main(int ac, char **av)
 	Game            *game = NULL;
     vector<string>  elems;
     
-	game = new Game(19, 20);
+	game = new Game(20, 20);
     game->setTime(100);
     game->addTeam("Blabla");
     game->addTeam("LesConnards");

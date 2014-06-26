@@ -24,7 +24,8 @@ class Team
     std::string getName() const;
     void addPlayer(Player *player);
     void listPlayers() const;
-    
+    int getPoints() const;
+      
     private:
     
     std::string m_name;
