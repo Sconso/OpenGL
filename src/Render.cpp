@@ -160,7 +160,7 @@ void Render::renderScene(void)
         glTranslatef((width / 2 - width) * 2 + 1, 0, 0);
         for (int x = 0; x < width; ++x)
         {
-            Cube::drawCube();
+            Cube::drawCube(x, y, m_game->getWidth() * 1.0, m_game->getHeight() * 1.0);
             Cube::drawOutline();
             
             m_game->getSquare(x, y, resTab);
@@ -532,19 +532,28 @@ void Render::computeFps(void)
 
 void Render::computeTime(void)
 {
+    static int foodTime = 0;
+    
     ++mt_frame;
     mt_time = glutGet(GLUT_ELAPSED_TIME);
     if (mt_time - mt_timebase > 1000 / m_game->getTime())
     {
         vector<string> move;
         
-        move.push_back("lol");
-        move.push_back("#42");
-        move.push_back(to_string(rand() % 20));
-        move.push_back(to_string(rand() % 20));
-        move.push_back("1");
-        m_game->movePlayer(move);
-        m_game->starvePlayers();
+        ++foodTime;
+        if (foodTime == 126)
+        {
+            move.push_back("lol");
+            move.push_back("#42");
+            move.push_back(to_string(rand() % 20));
+            move.push_back(to_string(rand() % 20));
+            move.push_back("1");
+            m_game->movePlayer(move);
+        
+
+            foodTime = 0;
+            m_game->starvePlayers();
+        }
         
 		mt_timebase = mt_time;
 		mt_frame = 0;
@@ -555,12 +564,25 @@ void Render::computeTime(void)
 /*********         CUBE          *****************/
 /*************************************************/
 
-void Cube::drawCube()
+void Cube::drawCube(int x, int y, float xMax, float yMax)
 {
     glPushMatrix();
     
     glBegin(GL_QUADS);
-    glColor3ub(70, 171, 67);
+    if (x * y < xMax / 2)
+        glColor3ub(70, 171, 67);
+    else if (x * y > xMax / 1.5 && x * y < yMax)
+        glColor3ub(7, 171, 30);
+    else if (x + y > xMax / 3 && x + y < xMax / 2)
+        glColor3ub(100, 82, 0);
+    else if (x * y > (xMax * 20) + (yMax * 10))
+        glColor3ub(91, 71, 0);
+    else if (x * y > (xMax * 3) + (yMax * 6))
+        glColor3ub(7, 171, 30);
+    else if (x * y > xMax + yMax + xMax)
+        glColor3ub(65, 242, 76);
+    else
+        glColor3ub(27, 196, 57);
     glVertex3d(1,1,1);
     glVertex3d(1,1,-1);
     glVertex3d(-1,1,-1);

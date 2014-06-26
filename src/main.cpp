@@ -54,8 +54,8 @@ int			main(int ac, char **av)
         return (1);
     }
     
-	game = new Game(20, 20);
-    game->setTime(1);
+	game = new Game(40, 60);
+    game->setTime(100);
     game->addTeam("sconso");
     game->addTeam("gpetrov");
     game->addTeam("ebaudet");

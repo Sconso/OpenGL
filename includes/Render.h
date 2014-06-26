@@ -126,7 +126,7 @@ class Camera
 class Cube
 {
     public:
-    static void drawCube();
+    static void drawCube(int x, int y, float xMax, float yMax);
     static void drawOutline();
     
     private:
