@@ -17,8 +17,44 @@
 #include <vector>
 #include <cstdlib>
 #include <Render.h>
+#include <arpa/inet.h>
+#include <netdb.h>
 
 using namespace std;
+
+int			create_socket(string addr, int port)
+{
+	int					sock;
+	struct sockaddr_in	sin;
+    struct hostent      *hostinfo;
+	struct protoent		*proto;
+
+    
+	if (!(proto = getprotobyname("tcp")))
+    {
+        cout << "Proto error." << endl;
+		return (-1);
+    }
+    if ((sock = socket(PF_INET, SOCK_STREAM, proto->p_proto)) == -1)
+    {
+        cout << "Sock error." << endl;
+        return (-1);
+    }
+    if ((hostinfo = gethostbyname(addr.c_str())) == NULL)
+    {
+        cout << "Wrong host." << endl;
+        return (-1);
+    }
+	sin.sin_family = AF_INET;
+	sin.sin_port = htons(port);
+	sin.sin_addr.s_addr = inet_addr(addr.c_str());
+	if (connect(sock, (const struct sockaddr *)&sin, sizeof(sin)) == -1)
+    {
+        cout << "Connect error." << endl;
+        return (-1);
+    }
+	return (sock);
+}
 
 void        manager(vector<string> &msg, Game *game)
 {
@@ -47,14 +83,32 @@ int			main(int ac, char **av)
 {
 	Game            *game = NULL;
     vector<string>  elems;
+    int             sock;
+    int             port;
+    string          host;
+    string          str;
     
-    if (ac < 3)
+    if (ac < 2)
     {
         cout << "Usage : " << av[0] << " <port> [hostname]" << endl;
         return (1);
     }
+    port = stoi(av[1]);
+    host = (ac < 3 ? "127.0.0.1" : av[2]);
+    sock = create_socket(host, port);
     
-	game = new Game(40, 60);
+    if (sock == -1)
+        return (-1);
+    cout << "Connected to " << host << ":" << port << endl;
+    
+    while (read_server(sock, str) > 0)
+        ;
+    cout << str << endl;
+    
+    str = "GRAPHIC\n";
+    write_server(sock, str);
+    
+	game = new Game(40, 60, sock);
     game->setTime(100);
     game->addTeam("sconso");
     game->addTeam("gpetrov");

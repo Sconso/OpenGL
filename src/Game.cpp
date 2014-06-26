@@ -21,7 +21,7 @@
 
 using namespace std;
 
-Game::Game(int width, int height) : m_width(width), m_height(height), m_time(0)
+Game::Game(int width, int height, int socket) : m_width(width), m_height(height), m_socket(socket), m_time(0)
 {
     m_map = new Square* [height];
     if (m_map)
@@ -48,6 +48,11 @@ Game::~Game()
         delete it->second;
         m_teams.erase(it);
     }
+}
+
+int Game::getSocket(void) const
+{
+    return (m_socket);
 }
 
 void Game::getSquare(const int x, const int y) const

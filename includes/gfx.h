@@ -18,6 +18,8 @@
 #include <string>
 #include <sstream>
 
+# define BUF_SIZE (1024)
+
 /*
 ** ft_errors
 */
@@ -27,6 +29,9 @@ void    ft_exit(std::string str);
 ** tools.cpp
 */
 std::vector<std::string> &split(const std::string &s, char delim, std::vector<std::string> &elems);
+void write_server(int sock, std::string &buf);
+int read_server(int sock, std::string &buf);
+
 
 
 #endif
