@@ -114,7 +114,11 @@ Game        *initGame(int ac, char **av)
         read_server(sock, str);
         split(str, ' ', elems);
         if (elems[0] == "msz")
+        {
             game = new Game(stoi(elems[1].c_str()), stoi(elems[2].c_str()), sock);
+            str = "msz";
+            write_server(sock, str);
+        }
         else
             manager(elems, game);
     }
@@ -128,7 +132,7 @@ Game        *initGame(int ac, char **av)
     str = "GRAPHIC\n";
     write_server(sock, str);
     
-    game = new Game(40, 60, sock);
+    game = new Game(20, 20, sock);
     return (game);
 }
 
@@ -139,12 +143,15 @@ void        askServer(Game *game)
     fd_set          read;
     vector<string>  elems;
     string          str;
+    struct timeval  timeout;
     
     sock = game->getSocket();
     FD_ZERO(&read);
     FD_SET(sock, &read);
+    timeout.tv_sec = 0;
+    timeout.tv_usec = 0;
     
-    if ((sel = select(sock + 1, &read, NULL, NULL, NULL)) > 0)
+    if ((sel = select(sock + 1, &read, NULL, NULL, &timeout)) > 0)
     {
         read_server(sock, str);
         split(str, ' ', elems);

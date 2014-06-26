@@ -16,6 +16,7 @@
 #include <iostream>
 #include <map>
 #include <algorithm>
+#include <cmath>
 
 using namespace std;
 
@@ -271,14 +272,26 @@ void Render::drawPlayer(string team, int nb)
     glColor3ub(255, 255, 255);
     
     glPushMatrix();
-    glTranslatef(0.15, 0, 0.24);
-    gluSphere(params, 0.05, 20, 20);
-    glPopMatrix();
-    glPushMatrix();
-    glTranslatef(0.05, 0, 0.27);
-    gluSphere(params, 0.05, 20, 20);
+        glTranslatef(0.15, 0, 0.24);
+        gluSphere(params, 0.05, 20, 20);
+        glPushMatrix();
+            glColor3ub(0, 0, 0);
+            glTranslatef(0, 0, 0.035);
+            gluSphere(params, 0.02, 20, 20);
+        glPopMatrix();
     glPopMatrix();
     
+    glColor3ub(255, 255, 255);
+    glPushMatrix();
+        glTranslatef(0.05, 0, 0.27);
+        gluSphere(params, 0.05, 20, 20);
+        glPushMatrix();
+            glColor3ub(0, 0, 0);
+            glTranslatef(0, 0, 0.035);
+            gluSphere(params, 0.02, 20, 20);
+        glPopMatrix();
+    glPopMatrix();
+
     gluDeleteQuadric(params);
     
     glPopMatrix();
@@ -381,7 +394,21 @@ void Render::drawPoints(void)
         renderBitmapString(width - 180 - (name.size() * 7), textY, GLUT_BITMAP_HELVETICA_12, str);
         textY += 15;
     }
+}
+
+void Render::DrawEllipse(float radiusX, float radiusY)
+{
+    int i;
     
+    glBegin(GL_LINE_LOOP);
+    
+    for(i=0; i<360; i++)
+    {
+        float rad = i * M_PI / 180.0;
+        glVertex2f(cos(rad) * radiusX, sin(rad) * radiusY);
+    }
+    
+    glEnd();
 }
 
 void Render::mouseButton(int button, int state, int x, int y)

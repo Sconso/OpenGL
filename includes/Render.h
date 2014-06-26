@@ -37,6 +37,7 @@ class Render
     static void drawPlayer(std::string team, int nb);
     static void drawInventory(void);
     static void drawPoints(void);
+    static void DrawEllipse(float radiusX, float radiusY);
     
     /****************************/
     /*        PROCESSING        */
