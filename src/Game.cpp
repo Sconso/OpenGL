@@ -17,7 +17,6 @@
 #include <vector>
 #include <string>
 #include <iostream>
-#include <cstdlib>
 
 using namespace std;
 
@@ -87,7 +86,7 @@ void Game::getInventory(int nb, int tab[])
 void Game::setInventory(vector<string> &str)
 {
     string tmp = &str[1][1];
-    int nb = atoi(tmp.c_str());
+    int nb = stoi(tmp.c_str());
     
     m_players[nb]->setInventory(str);
 }
@@ -140,11 +139,11 @@ string Game::getTeam(int nb)
 void Game::addPlayer(vector<string> &str)
 {
     string tmp = &str[1][1];
-    int nb = atoi(tmp.c_str());
-    int x = atoi(str[2].c_str());
-    int y = atoi(str[3].c_str());
-    int orientation = atoi(str[4].c_str());
-    int level = atoi(str[5].c_str());
+    int nb = stoi(tmp.c_str());
+    int x = stoi(str[2].c_str());
+    int y = stoi(str[3].c_str());
+    int orientation = stoi(str[4].c_str());
+    int level = stoi(str[5].c_str());
     Team *team = m_teams[str[6]];
     m_players[nb] = new Player(nb, x, y, orientation, level, team);
     m_teams[str[6]]->addPlayer(m_players[nb]);
@@ -155,7 +154,7 @@ void Game::removePlayer(vector<string> &str)
 {
     map<int, Player *>::iterator it;
     string tmp = &str[1][1];
-    int nb = atoi(tmp.c_str());
+    int nb = stoi(tmp.c_str());
     
     it = m_players.find(nb);
     if (it != m_players.end())
@@ -223,10 +222,10 @@ map<string, Team *> Game::getTeams(void) const
 void Game::movePlayer(vector<string> &str)
 {
     string tmp = &str[1][1];
-    int nb = atoi(tmp.c_str());
-    int x = atoi(str[2].c_str());
-    int y = atoi(str[3].c_str());
-    int orientation = atoi(str[4].c_str());
+    int nb = stoi(tmp.c_str());
+    int x = stoi(str[2].c_str());
+    int y = stoi(str[3].c_str());
+    int orientation = stoi(str[4].c_str());
     
     m_map[m_players[nb]->getY()][m_players[nb]->getX()].removePlayer(m_players[nb]);
     m_map[y][x].addPlayer(m_players[nb]);
@@ -246,8 +245,8 @@ void Game::starvePlayers(void)
 void Game::setLevel(vector<string> &str)
 {
     string tmp = &str[1][1];
-    int nb = atoi(tmp.c_str());
-    int level = atoi(str[2].c_str());
+    int nb = stoi(tmp.c_str());
+    int level = stoi(str[2].c_str());
     
     m_players[nb]->setLevel(level);
 }
@@ -261,7 +260,7 @@ void Game::broadcast(vector<string> &str)
 {
     string tmp = &str[1][1];
     string msg;
-    int nb = atoi(tmp.c_str());
+    int nb = stoi(tmp.c_str());
     
     for (unsigned long i = 2; i < str.size(); ++i)
     {

@@ -42,10 +42,7 @@ int		read_server(int sock, string &buf)
 {
 	int		r;
     char    *str = new char[BUF_SIZE + 1];
-    static int i = 0;
-    ++i;
-    cout << "Appel n*" << i << endl;
-   
+
     strcpy(str, buf.c_str());
     if ((r = recv(sock, str, BUF_SIZE - 1, 0)) < 0)
 	{
@@ -56,9 +53,5 @@ int		read_server(int sock, string &buf)
     
     buf = str;
     delete [] str;
-    
-    cout << "r = " << r << endl;
-    cout << "Buf = " << buf << endl;
-    
 	return (r);
 }

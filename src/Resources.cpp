@@ -13,7 +13,6 @@
 #include <Resources.h>
 #include <vector>
 #include <string>
-#include <cstdlib>
 #include <iostream>
 
 using namespace std;
@@ -27,20 +26,20 @@ Resources::Resources()
 Resources::Resources(vector<string> &str)
 {
     for (int i = 0; i < 7; ++i)
-        m_resources[i] = atoi(str[i + 3].c_str());
+        m_resources[i] = stoi(str[i + 3].c_str());
     m_resources[7] = 0;
 }
 
 void Resources::setResources(vector<string> &str)
 {
     for (int i = 0; i < 7; ++i)
-        m_resources[i] = atoi(str[i + 3].c_str());
+        m_resources[i] = stoi(str[i + 3].c_str());
 }
 
 void Resources::setInventory(vector<string> &str)
 {
     for (int i = 0; i < 7; ++i)
-        m_resources[i] = atoi(str[i + 2].c_str());
+        m_resources[i] = stoi(str[i + 2].c_str());
 }
 
 void Resources::getResources() const

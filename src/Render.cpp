@@ -12,7 +12,6 @@
 
 #include <Render.h>
 #include <ctime>
-#include <cstdlib>
 #include <iostream>
 #include <gfx.h>
 #include <map>
