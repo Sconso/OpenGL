@@ -12,11 +12,12 @@
 
 #include <iostream>
 #include <Player.h>
+#include <GLUT/glut.h>
 
 using namespace std;
 
 Player::Player(int nb, int x, int y, int orientation, int level, Team *team) :
-m_nb(nb), m_x(x), m_y(y), m_orientation(orientation), m_level(level), m_team(team)
+m_nb(nb), m_x(x), m_y(y), m_orientation(orientation), m_level(level), m_team(team), m_msgTimeout(0)
 {
     m_inventory = new Resources();
     cout << "Player n*" << nb << " successfully added on team " << team->getName() << endl;
@@ -27,22 +28,37 @@ Player::~Player()
     delete m_inventory;
 }
 
-int Player::getNb() const
+int Player::getNb(void) const
 {
     return (m_nb);
 }
 
-int Player::getX() const
+int Player::getX(void) const
 {
     return (m_x);
 }
 
-int Player::getY() const
+int Player::getY(void) const
 {
     return (m_y);
 }
 
-string Player::getTeam() const
+int Player::getTimeout(void) const
+{
+    return (m_msgTimeout);
+}
+
+void Player::setTimeout(int timeout)
+{
+    m_msgTimeout = timeout;
+}
+
+string Player::getMsg(void) const
+{
+    return (m_msg);
+}
+
+string Player::getTeam(void) const
 {
     return m_team->getName();
 }
@@ -95,7 +111,9 @@ void Player::starve(void)
     m_inventory->setFood(m_inventory->getFood() - 1);
 }
 
-void Player::talk(string msg) const
+void Player::talk(string &msg)
 {
+    m_msg = msg;
+    m_msgTimeout = 100;
     cout << "Player " << m_nb << " says : \"" << msg << "\"" << endl;
 }

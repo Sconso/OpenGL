@@ -208,9 +208,16 @@ void Render::renderScene(void)
             {
                 glStencilFunc(GL_ALWAYS, (*it).second->getNb() + 1, -1);
                 drawPlayer((*it).second->getTeam(), (*it).second->getNb());
-                
-                string str = "Ta mere c'est une pute !";
-                drawBroadcast(str);
+                if (it->second->getTimeout() > 0)
+                {
+                    int timeout = it->second->getTimeout();
+                    
+                    if (timeout < 1000)
+                        it->second->setTimeout(glutGet(GLUT_ELAPSED_TIME) + (timeout * 1000 / m_game->getTime()));
+                    if (glutGet(GLUT_ELAPSED_TIME) >= it->second->getTimeout())
+                        it->second->setTimeout(0);
+                    drawBroadcast(it->second->getMsg());
+                }
             }
             glStencilFunc(GL_ALWAYS, 0, -1);
 

@@ -21,10 +21,13 @@ class Player
     public:
     Player(int nb, int x, int y, int orientation, int level, Team *team);
     ~Player();
-    int getNb() const;
-    void getPlayer() const;
-    int getX() const;
-    int getY() const;
+    int getNb(void) const;
+    void getPlayer(void) const;
+    int getX(void) const;
+    int getY(void) const;
+    int getTimeout(void) const;
+    void setTimeout(int timeout);
+    std::string getMsg(void) const;
     std::string getTeam() const;
     void move(int x, int y, int orientation);
     int getLevel(void) const;
@@ -33,7 +36,7 @@ class Player
     void getInventory(int tab[]) const;
     void starve(void);
     void setInventory(std::vector<std::string> &str);
-    void talk(std::string msg) const;
+    void talk(std::string &msg);
       
     private:
     int m_nb;
@@ -43,6 +46,9 @@ class Player
     int m_level;
     Team *m_team;
     Resources *m_inventory;
+    
+    std::string m_msg;
+    int m_msgTimeout;
 };
 
 #endif
