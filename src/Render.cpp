@@ -22,6 +22,8 @@ using namespace std;
 
 Camera* Render::m_camera = NULL;
 Game* Render::m_game = NULL;
+GLuint Render::m_dlId = 0;
+
 float Render::m_rotX = 10;
 float Render::m_rotY = 30;
 float Render::m_rotZ = 0;
@@ -51,6 +53,7 @@ int Render::mt_timebase = 0;
 int Render::mt_frame = 0;
 
 int Render::m_showInventory = -1;
+char Render::m_showLines = 1;
 
 void Render::newWindow(int ac, char **av, int w, int h, string name, Game *game)
 {
@@ -62,9 +65,13 @@ void Render::newWindow(int ac, char **av, int w, int h, string name, Game *game)
     glutCreateWindow(name.c_str());
     
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
     
     m_camera = new Camera();
     m_game = game;
+    m_camera->posZ = m_game->getWidth()+ (m_game->getHeight() * 1.5);
+    m_dlId = createDl();
 }
 
 void Render::setOrthographicProjection()
@@ -155,6 +162,8 @@ void Render::renderScene(void)
     
     glTranslatef(m_posX, 0, m_posZ);
     glTranslatef(0, 0, (height / 2 - height) * 2 + 1);
+    
+    glPushMatrix();
     for (int y = 0; y < height; ++y)
     {
         glPushMatrix();
@@ -162,8 +171,6 @@ void Render::renderScene(void)
         for (int x = 0; x < width; ++x)
         {
             Cube::drawCube(x, y, m_game->getWidth() * 1.0, m_game->getHeight() * 1.0);
-            Cube::drawOutline();
-            
             m_game->getSquare(x, y, resTab);
 
             glPushMatrix();
@@ -201,6 +208,9 @@ void Render::renderScene(void)
             {
                 glStencilFunc(GL_ALWAYS, (*it).second->getNb() + 1, -1);
                 drawPlayer((*it).second->getTeam(), (*it).second->getNb());
+                
+                string str = "Ta mere c'est une pute !";
+                drawBroadcast(str);
             }
             glStencilFunc(GL_ALWAYS, 0, -1);
 
@@ -209,7 +219,11 @@ void Render::renderScene(void)
         glPopMatrix();
         glTranslatef(0, 0, 2);
     }
+    glPopMatrix();
 
+    if (m_showLines)
+        glCallList(m_dlId);
+    
     glPushMatrix();
     glLoadIdentity();
     setOrthographicProjection();
@@ -396,11 +410,27 @@ void Render::drawPoints(void)
     }
 }
 
+void Render::drawBroadcast(std::string msg)
+{
+    float sizeX = msg.length() / 10.0;
+    glPushMatrix();
+
+    
+    glTranslatef(0, 3, 0);
+    glColor3ub(255, 255, 255);
+    DrawEllipse(sizeX, 0.3);
+
+    glColor3ub(0, 0, 0);
+    renderStrokeFontString(-(sizeX / 1.5), -0.1, 0.001, 0.002, 3, GLUT_STROKE_ROMAN, msg);
+    
+    glPopMatrix();
+}
+
 void Render::DrawEllipse(float radiusX, float radiusY)
 {
     int i;
     
-    glBegin(GL_LINE_LOOP);
+    glBegin(GL_TRIANGLE_FAN);
     
     for(i=0; i<360; i++)
     {
@@ -427,7 +457,7 @@ void Render::mouseButton(int button, int state, int x, int y)
     }
     else if (button == 2)
         m_camera->posZ++;
-    
+   
     else if (button == 3)
         m_camera->posZ -= (m_camera->posZ - 1 <= 4 ? 0 : 1);
     else if (button == 4)
@@ -467,6 +497,8 @@ void Render::processNormalKeys(unsigned char key, int x, int y)
         ft_exit("Attempting to exit...");
     else if (key == '`')
         m_activeFps = (m_activeFps ? 0 : 1);
+    else if (key == '1')
+        m_showLines = (m_showLines ? 0 : 1);
     else if (key == '+')
         m_zoomIn = 1;
     else if (key == '-')
@@ -543,6 +575,54 @@ void Render::renderBitmapString(float x, float y, void *font, string str)
 		glutBitmapCharacter(font, *c);
 }
 
+void Render::renderStrokeFontString(float x, float y, float z, float scale, float width, void *font, string str)
+{
+	glPushMatrix();
+
+	glTranslatef(x, y,z);
+    glLineWidth(width);
+    glScalef(scale, scale, scale);
+
+	for (char *c = &str[0]; *c != '\0'; c++)
+		glutStrokeCharacter(font, *c);
+    
+    glLineWidth(1);
+	glPopMatrix();
+}
+
+GLuint Render::createDl(void)
+{
+    GLuint lineDl;
+    GLuint loopDl;
+    int     width = m_game->getWidth();
+    int     height = m_game->getHeight();
+    
+    lineDl = glGenLists(1);
+    loopDl = glGenLists(1);
+    
+    glNewList(lineDl, GL_COMPILE);
+        Cube::drawOutline();
+    glEndList();
+    
+    glNewList(loopDl, GL_COMPILE);
+        for (int y = 0; y < height; ++y)
+        {
+            glPushMatrix();
+            glTranslatef((width / 2 - width) * 2 + 1, 0, 0);
+            
+            for (int x = 0; x < width; ++x)
+            {
+                glCallList(lineDl);
+                glTranslatef(2, 0, 0);
+            }
+            glPopMatrix();
+            glTranslatef(0, 0, 2);
+        }
+    glEndList();
+    
+    return (loopDl);
+}
+
 void Render::computeFps(void)
 {
     ++m_frame;
@@ -610,36 +690,36 @@ void Cube::drawCube(int x, int y, float xMax, float yMax)
         glColor3ub(65, 242, 76);
     else
         glColor3ub(27, 196, 57);
-    glVertex3d(1,1,1);
-    glVertex3d(1,1,-1);
-    glVertex3d(-1,1,-1);
-    glVertex3d(-1,1,1);
+    glVertex3i(1,1,1);
+    glVertex3i(1,1,-1);
+    glVertex3i(-1,1,-1);
+    glVertex3i(-1,1,1);
 
     glColor3ub(111, 83, 69);
-    glVertex3d(1,-1,1);
-    glVertex3d(1,-1,-1);
-    glVertex3d(1,1,-1);
-    glVertex3d(1,1,1);
+    glVertex3i(1,-1,1);
+    glVertex3i(1,-1,-1);
+    glVertex3i(1,1,-1);
+    glVertex3i(1,1,1);
     
-    glVertex3d(-1,-1,1);
-    glVertex3d(-1,-1,-1);
-    glVertex3d(1,-1,-1);
-    glVertex3d(1,-1,1);
+    glVertex3i(-1,-1,1);
+    glVertex3i(-1,-1,-1);
+    glVertex3i(1,-1,-1);
+    glVertex3i(1,-1,1);
     
-    glVertex3d(-1,1,1);
-    glVertex3d(-1,1,-1);
-    glVertex3d(-1,-1,-1);
-    glVertex3d(-1,-1,1);
+    glVertex3i(-1,1,1);
+    glVertex3i(-1,1,-1);
+    glVertex3i(-1,-1,-1);
+    glVertex3i(-1,-1,1);
     
-    glVertex3d(1,1,-1);
-    glVertex3d(1,-1,-1);
-    glVertex3d(-1,-1,-1);
-    glVertex3d(-1,1,-1);
+    glVertex3i(1,1,-1);
+    glVertex3i(1,-1,-1);
+    glVertex3i(-1,-1,-1);
+    glVertex3i(-1,1,-1);
     
-    glVertex3d(1,-1,1);
-    glVertex3d(1,1,1);
-    glVertex3d(-1,1,1);
-    glVertex3d(-1,-1,1);
+    glVertex3i(1,-1,1);
+    glVertex3i(1,1,1);
+    glVertex3i(-1,1,1);
+    glVertex3i(-1,-1,1);
     glEnd();
     
     glPopMatrix();
@@ -654,35 +734,35 @@ void Cube::drawOutline()
     glBegin(GL_QUADS);
     glColor3f(.3, .3, .3);
     
-    glVertex3d(1,1,1);
-    glVertex3d(1,1,-1);
-    glVertex3d(-1,1,-1);
-    glVertex3d(-1,1,1);
+    glVertex3i(1,1,1);
+    glVertex3i(1,1,-1);
+    glVertex3i(-1,1,-1);
+    glVertex3i(-1,1,1);
     
-    glVertex3d(1,-1,1);
-    glVertex3d(1,-1,-1);
-    glVertex3d(1,1,-1);
-    glVertex3d(1,1,1);
+    glVertex3i(1,-1,1);
+    glVertex3i(1,-1,-1);
+    glVertex3i(1,1,-1);
+    glVertex3i(1,1,1);
     
-    glVertex3d(-1,-1,1);
-    glVertex3d(-1,-1,-1);
-    glVertex3d(1,-1,-1);
-    glVertex3d(1,-1,1);
+    glVertex3i(-1,-1,1);
+    glVertex3i(-1,-1,-1);
+    glVertex3i(1,-1,-1);
+    glVertex3i(1,-1,1);
     
-    glVertex3d(-1,1,1);
-    glVertex3d(-1,1,-1);
-    glVertex3d(-1,-1,-1);
-    glVertex3d(-1,-1,1);
+    glVertex3i(-1,1,1);
+    glVertex3i(-1,1,-1);
+    glVertex3i(-1,-1,-1);
+    glVertex3i(-1,-1,1);
     
-    glVertex3d(1,1,-1);
-    glVertex3d(1,-1,-1);
-    glVertex3d(-1,-1,-1);
-    glVertex3d(-1,1,-1);
+    glVertex3i(1,1,-1);
+    glVertex3i(1,-1,-1);
+    glVertex3i(-1,-1,-1);
+    glVertex3i(-1,1,-1);
     
-    glVertex3d(1,-1,1);
-    glVertex3d(1,1,1);
-    glVertex3d(-1,1,1);
-    glVertex3d(-1,-1,1);
+    glVertex3i(1,-1,1);
+    glVertex3i(1,1,1);
+    glVertex3i(-1,1,1);
+    glVertex3i(-1,-1,1);
     glEnd();
     
     glPopMatrix();

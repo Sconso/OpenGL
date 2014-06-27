@@ -37,6 +37,7 @@ class Render
     static void drawPlayer(std::string team, int nb);
     static void drawInventory(void);
     static void drawPoints(void);
+    static void drawBroadcast(std::string msg);
     static void DrawEllipse(float radiusX, float radiusY);
     
     /****************************/
@@ -60,6 +61,8 @@ class Render
     /****************************/
     static void renderScene(void);
     static void renderBitmapString(float x, float y, void *font, std::string str);
+    static void renderStrokeFontString(float x, float y, float z, float scale, float width, void *font, std::string str);
+    static GLuint createDl(void);
 
     /****************************/
     /*       CALCULATIONS       */
@@ -68,6 +71,7 @@ class Render
     static void computeTime(void);
     
     private:
+    /* POSITIONS */
     static float m_rotX;
     static float m_rotY;
     static float m_rotZ;
@@ -75,6 +79,7 @@ class Render
     static float m_posY;
     static float m_posZ;
     
+    /* KEYS */
     static char m_up;
     static char m_down;
     static char m_left;
@@ -86,8 +91,10 @@ class Render
     static char m_zoomIn;
     static char m_zoomOut;
     
+    /* ATTRIBUTES */
     static Camera *m_camera;
     static Game *m_game;
+    static GLuint m_dlId;
     
     /* FPS */
     static char m_activeFps;
@@ -101,7 +108,9 @@ class Render
     static int mt_timebase;
     static int mt_frame;
     
+    /* FLAGS */
     static int m_showInventory;
+    static char m_showLines;
 };
 
 class Camera

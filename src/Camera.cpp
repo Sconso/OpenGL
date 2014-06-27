@@ -18,7 +18,7 @@ Camera::Camera()
     
     posX = 0;
     posY = 0;
-    posZ = 50;
+    posZ = 0;
 
     pointX = 0;
     pointY = 0;
