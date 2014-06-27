@@ -12,7 +12,7 @@
 
 #include <iostream>
 #include <Player.h>
-#include <GLUT/glut.h>
+#include <Render.h>
 
 using namespace std;
 
@@ -20,12 +20,15 @@ Player::Player(int nb, int x, int y, int orientation, int level, Team *team) :
 m_nb(nb), m_x(x), m_y(y), m_orientation(orientation), m_level(level), m_team(team), m_msgTimeout(0)
 {
     m_inventory = new Resources();
+    m_animation = NULL;
     cout << "Player n*" << nb << " successfully added on team " << team->getName() << endl;
 }
 
 Player::~Player()
 {
     delete m_inventory;
+    if (m_animation != NULL)
+        delete m_animation;
 }
 
 int Player::getNb(void) const
@@ -51,6 +54,22 @@ int Player::getTimeout(void) const
 void Player::setTimeout(int timeout)
 {
     m_msgTimeout = timeout;
+}
+
+Animation *Player::getAnimation(void) const
+{
+    return (m_animation);
+}
+
+void Player::removeAnimation(void)
+{
+    delete m_animation;
+    m_animation = NULL;
+}
+
+int Player::doAnimation(void) const
+{
+    return (m_animation->CircleAnimation());
 }
 
 string Player::getMsg(void) const
@@ -111,9 +130,22 @@ void Player::starve(void)
     m_inventory->setFood(m_inventory->getFood() - 1);
 }
 
+void Player::expulse(void)
+{
+    if (m_animation != NULL)
+        removeAnimation();
+    m_animation = new Animation(3, 0.3, 1, 0.1, 0.3, 150);
+}
+
 void Player::talk(string &msg)
 {
     m_msg = msg;
-    m_msgTimeout = 100;
+    m_msgTimeout = 1000;
     cout << "Player " << m_nb << " says : \"" << msg << "\"" << endl;
+}
+
+void Player::incantation(int timeUnit)
+{
+    m_animation = new Animation(1, 0.3, 1, 0.1, 0.3, 75);
+    m_animation->setTimeout(126, timeUnit);
 }

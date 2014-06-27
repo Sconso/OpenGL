@@ -21,6 +21,14 @@
 
 # define BUF_SIZE (1024)
 
+enum e_animationState
+{
+    BEGIN,
+    PLAY,
+    STOP,
+    ONE_SHOT
+};
+
 /*
  ** main.c
  */

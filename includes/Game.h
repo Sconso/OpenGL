@@ -57,7 +57,9 @@ class Game
     void starvePlayers(void);
     void setLevel(std::vector<std::string> &str);
     int getLevel(int nb);
+    void expulse(std::vector<std::string> &str);
     void broadcast(std::vector<std::string> &str);
+    void incantation(std::vector<std::string> &str);
     
     private:
     

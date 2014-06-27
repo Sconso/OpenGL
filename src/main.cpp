@@ -73,8 +73,12 @@ void        manager(vector<string> &msg, Game *game)
             game->setLevel(msg);
         else if (msg[0] == "pin")
             game->setInventory(msg);
+        else if (msg[0] == "pex")
+            game->expulse(msg);
         else if (msg[0] == "pbc")
             game->broadcast(msg);
+        else if (msg[0] == "pic")
+            game->incantation(msg);
         else if (msg[0] == "pdi")
             game->removePlayer(msg);
         else if (msg[0] == "sgt")
@@ -244,7 +248,10 @@ int			main(int ac, char **av)
     split("lol #42 Salut les pucelles !", ' ', elems);
     game->broadcast(elems);
     elems.clear();
-        
+    
+//    split("pic 5 6 1 #6 #5", ' ', elems);
+//    manager(elems, game);
+    
     Render::newWindow(ac, av, 1280, 700, "Zappy::GFX", game);
     Render::enableAA();
     Render::mainLoop();

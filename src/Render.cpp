@@ -133,11 +133,19 @@ void Render::changeSize(int w, int h)
 
 void Render::renderScene(void)
 {
+    static int i = 0;
     int width = m_game->getWidth();
     int height = m_game->getHeight();
     int resTab[7];
     static int resX = rand() % 200;
     static int resZ = rand() % 200;
+    
+    ++i;
+    if (i == 1)
+    {
+        Player *p = m_game->getPlayer(6);
+        p->incantation(m_game->getTime());
+    }
     
     askServer(m_game);
     computeFps();
@@ -208,19 +216,27 @@ void Render::renderScene(void)
             {
                 glStencilFunc(GL_ALWAYS, (*it).second->getNb() + 1, -1);
                 drawPlayer((*it).second->getTeam(), (*it).second->getNb());
+
+                if (it->second->getAnimation() != NULL)
+                {
+                    if (!it->second->doAnimation())
+                        it->second->removeAnimation();
+                }
+//                CircleAnimation(PLAY, 0.03, 1, 0.1, 0.3, 75);
+                
                 if (it->second->getTimeout() > 0)
                 {
                     int timeout = it->second->getTimeout();
                     
                     if (timeout < 1000)
-                        it->second->setTimeout(glutGet(GLUT_ELAPSED_TIME) + (timeout * 1000 / m_game->getTime()));
+                        it->second->setTimeout(glutGet(GLUT_ELAPSED_TIME) + (timeout * 1000));
                     if (glutGet(GLUT_ELAPSED_TIME) >= it->second->getTimeout())
                         it->second->setTimeout(0);
                     drawBroadcast(it->second->getMsg());
                 }
             }
             glStencilFunc(GL_ALWAYS, 0, -1);
-
+            
             glTranslatef(2, 0, 0);
         }
         glPopMatrix();
@@ -446,6 +462,36 @@ void Render::DrawEllipse(float radiusX, float radiusY)
     }
     
     glEnd();
+}
+
+void Render::DrawPower(float radiusX, float radiusY, int color)
+{
+    int i;
+  
+    glDisable(GL_CULL_FACE);
+
+    if (m_camera->posZ < 50)
+        glLineWidth(100);
+    else if (m_camera->posZ < 100)
+        glLineWidth(4);
+    else
+        glLineWidth(1);
+    glBegin(GL_LINES);
+    
+    for(i=0; i<180; i++)
+    {
+        float rad = i * M_PI / 180.0;
+        int c;
+        
+        c = (color + i <= 255 ? color + i : 255);
+        glColor3ub(255, c, c);
+
+        glVertex2f(cos(rad) * radiusX, sin(rad) * radiusY);
+    }
+    glEnd();
+    glLineWidth(1);
+    
+    glEnable(GL_CULL_FACE);
 }
 
 void Render::mouseButton(int button, int state, int x, int y)
@@ -776,5 +822,46 @@ void Cube::drawOutline()
     
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
+}
+
+/*************************************************/
+/*********         ANIMATION     *****************/
+/*************************************************/
+
+Animation::Animation(char state, float speed, float size, float xDelta, float yDelta, int color) :
+    m_state(state), m_speed(speed), m_size(size), m_xDelta(xDelta), m_yDelta(yDelta), m_color(color), m_timeout(0)
+{}
+
+void Animation::setTimeout(int timeout, int timeUnit)
+{
+    m_timeout = glutGet(GLUT_ELAPSED_TIME) + (timeout * 1000 / timeUnit);
+}
+
+int Animation::CircleAnimation(void)
+{
+    static float xRadius = 0;
+    static float yRadius = 0;
+    
+    if (m_timeout > 0 && glutGet(GLUT_ELAPSED_TIME) >= m_timeout)
+        return (0);
+    if (m_state == BEGIN)
+        xRadius = yRadius = 0;
+    else if (m_state == STOP)
+    {
+        xRadius = yRadius = 0;
+        return (0);
+    }
+   
+    Render::DrawPower(xRadius, yRadius, m_color);
+    
+    xRadius += m_xDelta * m_speed;
+    yRadius += m_yDelta * m_speed;
+    if (xRadius >= m_size)
+    {
+        xRadius = yRadius = 0;
+        if (m_state == ONE_SHOT)
+            return (0);
+    }
+    return (1);
 }
 

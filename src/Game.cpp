@@ -256,6 +256,22 @@ int Game::getLevel(int nb)
     return (m_players[nb]->getLevel());
 }
 
+void Game::expulse(vector<string> &str)
+{
+    string tmp = &str[1][1];
+    int nb = stoi(tmp.c_str());
+    
+    m_players[nb]->expulse();
+}
+
+void Game::incantation(vector<string> &str)
+{
+    string tmp = &str[4][1];
+    int nb = stoi(tmp.c_str());
+    
+    m_players[nb]->incantation(m_time);
+}
+
 void Game::broadcast(vector<string> &str)
 {
     string tmp = &str[1][1];

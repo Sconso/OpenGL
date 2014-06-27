@@ -39,6 +39,7 @@ class Render
     static void drawPoints(void);
     static void drawBroadcast(std::string msg);
     static void DrawEllipse(float radiusX, float radiusY);
+    static void DrawPower(float radiusX, float radiusY, int color);
     
     /****************************/
     /*        PROCESSING        */
@@ -140,6 +141,23 @@ class Cube
     static void drawOutline();
     
     private:
+};
+
+class Animation
+{
+    public:
+    Animation(char state, float speed, float size, float xDelta, float yDelta, int color);
+    void setTimeout(int timeout, int timeUnit);
+    int CircleAnimation(void);
+
+    private:
+    char m_state;
+    float m_speed;
+    float m_size;
+    float m_xDelta;
+    float m_yDelta;
+    int m_color;
+    int m_timeout;
 };
 
 #endif
