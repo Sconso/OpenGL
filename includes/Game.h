@@ -24,9 +24,11 @@ class Game
 {
     public:
     
-    Game(int width, int height, int socket);
+    Game(int width, int height, int socket, int demo);
     ~Game();
     
+    int getDemo(void) const;
+    void setDemo(int val);
     int getSocket(void) const;
     
     void getSquare(const int x, const int y) const;
@@ -50,6 +52,7 @@ class Game
     void listPlayers() const;
     void listPlayers(int x, int y) const;
     void listPlayers(std::string name);
+    std::map<int, Player *> getPlayers(void) const;
     Player *getPlayer(int nb) const;
     std::map<int, Player *> getPlayers(int x, int y) const;
     std::map<std::string, Team *> getTeams(void) const;
@@ -67,6 +70,7 @@ class Game
     int m_width;
     int m_height;
     int m_socket;
+    int m_demo;
     Square **m_map;
     int m_time;
     std::map<std::string, Team *> m_teams;

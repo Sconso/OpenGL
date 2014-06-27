@@ -20,6 +20,7 @@
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <sys/select.h>
+#include <ctime>
 
 using namespace std;
 
@@ -121,7 +122,7 @@ Game        *initGame(int ac, char **av)
         split(str, ' ', elems);
         if (elems[0] == "msz")
         {
-            game = new Game(stoi(elems[1].c_str()), stoi(elems[2].c_str()), sock);
+            game = new Game(stoi(elems[1].c_str()), stoi(elems[2].c_str()), sock, 0);
             str = "msz";
             write_server(sock, str);
         }
@@ -137,8 +138,6 @@ Game        *initGame(int ac, char **av)
     
     str = "GRAPHIC\n";
     write_server(sock, str);
-    
-    game = new Game(20, 20, sock);
     return (game);
 }
 
@@ -219,48 +218,51 @@ void        demo_mode(Game *game)
     split("pin #42 463 4 2 1 6 3 1\n", ' ', elems);
     manager(elems, game);
     
-    
+    for (int y = 0; y < game->getHeight(); ++y)
+    {
+        for (int x = 0; x < game->getWidth(); ++x)
+        {
+            if (rand() % 2)
+            {
+                string str = "bct " + to_string(x) + " " + to_string(y) + " 1 1 1 1 1 1 1\n";
+                split(str, ' ', elems);
+                manager(elems, game);
+            }
+        }
+    }
 }
-
 
 int			main(int ac, char **av)
 {
 	Game            *game = NULL;
     vector<string>  elems;
+    int            demo(0);
     
-    if (ac < 2)
+    if (ac == 2)
+    {
+        string str = av[1];
+        if (str == "-demo")
+        {
+            demo = 1;
+            game = new Game(20, 20, 0, demo);
+        }
+    }
+    else if (ac < 2)
     {
         cout << "Usage : " << av[0] << " <port> [hostname]" << endl;
         return (1);
     }
     
-    if (!(game = initGame(ac, av)))
+    if (demo == 0 && !(game = initGame(ac, av)))
+    {
+        cout << "Server error." << endl;
         return (-1);
-
-    demo_mode(game);
-
+    }
     
-    split("bct 0 0 2 4 5 1 3 5 1\n", ' ', elems);
-    if (elems[0] == "bct")
-        game->setSquare(stoi(elems[1].c_str()), stoi(elems[2].c_str()), elems);
-    elems.clear();
-    split("bct 4 19 32 5 45 2 32 53 21\n", ' ', elems);
-    if (elems[0] == "bct")
-        game->setSquare(stoi(elems[1].c_str()), stoi(elems[2].c_str()), elems);
+    srand(time(0));
+    if (demo)
+        demo_mode(game);
 
-    game->getSquare(0, 0);
-    game->getSquare(2, 0);
-    game->getSquare(4, 19);
-    
-    elems.clear();
-
-    split("lol #42 Salut les pucelles !", ' ', elems);
-    game->broadcast(elems);
-    elems.clear();
-    
-//    split("pic 5 6 1 #6 #5", ' ', elems);
-//    manager(elems, game);
-    
     Render::newWindow(ac, av, 1280, 700, "Zappy::GFX", game);
     Render::enableAA();
     Render::mainLoop();

@@ -68,6 +68,7 @@ void Player::removeAnimation(void)
     {
         delete m_animation;
         m_animation = NULL;
+        m_animationFunct = NULL;
     }
 }
 

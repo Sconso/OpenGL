@@ -54,11 +54,10 @@ int Render::mt_frame = 0;
 
 int Render::m_showInventory = -1;
 char Render::m_showLines = 1;
-string Render::m_win = "sconso";
+string Render::m_win = "";
 
 void Render::newWindow(int ac, char **av, int w, int h, string name, Game *game)
 {
-    srand(time(0));
     glutInit(&ac, av);
     glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA | GLUT_STENCIL);
     glutInitWindowPosition(-1, -1);
@@ -134,19 +133,11 @@ void Render::changeSize(int w, int h)
 
 void Render::renderScene(void)
 {
-    static int i = 0;
     int width = m_game->getWidth();
     int height = m_game->getHeight();
     int resTab[7];
     static int resX = rand() % 200;
     static int resZ = rand() % 200;
-    
-    ++i;
-    if (i == 100)
-    {
-        Player *p = m_game->getPlayer(6);
-        p->setLevel(6);
-    }
     
     askServer(m_game);
     computeFps();
@@ -223,7 +214,6 @@ void Render::renderScene(void)
                     if (!it->second->doAnimation())
                         it->second->removeAnimation();
                 }
-//                CircleAnimation(PLAY, 0.03, 1, 0.1, 0.3, 75);
                 
                 if (it->second->getTimeout() > 0)
                 {
@@ -434,6 +424,12 @@ void Render::drawPoints(void)
         str += " = " + to_string(points) + " point" + (points > 1 ? "s" : "");
         renderBitmapString(width - 180 - (name.size() * 7), textY, GLUT_BITMAP_HELVETICA_12, str);
         textY += 15;
+        
+        if (m_game->getDemo() && points >= 20)
+        {
+            m_game->setDemo(0);
+            m_win = name;
+        }
     }
 }
 
@@ -724,24 +720,44 @@ void Render::computeFps(void)
 void Render::computeTime(void)
 {
     static int foodTime = 0;
-    
+ 
     ++mt_frame;
     mt_time = glutGet(GLUT_ELAPSED_TIME);
     if (mt_time - mt_timebase > 1000 / m_game->getTime())
     {
-        vector<string> move;
-        
         ++foodTime;
         if (foodTime == 126)
         {
-            move.push_back("lol");
-            move.push_back("#42");
-            move.push_back(to_string(rand() % 20));
-            move.push_back(to_string(rand() % 20));
-            move.push_back("1");
-            m_game->movePlayer(move);
-        
+            if (m_game->getDemo())
+            {
+                vector<string> move;
+                map<int, Player *>players;
+                map<int, Player *>::iterator it;
 
+                players = m_game->getPlayers();
+                for (it = players.begin(); it != players.end(); ++it)
+                {
+                    move.push_back("ppo");
+                    move.push_back("#" + to_string(it->second->getNb()));
+                    move.push_back(to_string(rand() % m_game->getWidth()));
+                    move.push_back(to_string(rand() % m_game->getHeight()));
+                    move.push_back("1");
+                    m_game->movePlayer(move);
+                    move.clear();
+
+                    if (rand() % 10 == 0)
+                    {
+                        string str = "Salut 42 !";
+                        
+                        it->second->talk(str);
+                    }
+                    else if (rand() % 5 == 0)
+                        it->second->setLevel(it->second->getLevel() + 1);
+                    else if (rand() % 3 == 0)
+                        it->second->incantation(m_game->getTime());
+                }
+            }
+            
             foodTime = 0;
             m_game->starvePlayers();
         }
