@@ -65,7 +65,7 @@ void        manager(vector<string> &msg, Game *game)
         if (msg[0] == "bct")
             game->setSquare(stoi(msg[1].c_str()), stoi(msg[2].c_str()), msg);
         else if (msg[0] == "tna")
-            game->listPlayers(msg[1]);
+            game->addTeam(msg[1]);
         else if (msg[0] == "pnw")
             game->addPlayer(msg);
         else if (msg[0] == "ppo")
