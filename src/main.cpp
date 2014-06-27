@@ -109,25 +109,28 @@ Game        *initGame(int ac, char **av)
     timeout.tv_usec = 10000;
    
     if ((sock = create_socket(host, port)) == -1)
+    {
+        cout << "Can't create socket." << endl;
         return (NULL);
+    }
     
     cout << "\033[32mConnected to " << host << ":" << port << "\033[0m" << endl;
     
     FD_ZERO(&read);
     FD_SET(sock, &read);
-    
+
+    str = "GRAPHIC\n";
+    write_server(sock, str);
+
     while ((sel = select(sock + 1, &read, NULL, NULL, &timeout)) > 0)
     {
         read_server(sock, str);
         split(str, ' ', elems);
         if (elems[0] == "msz")
-        {
             game = new Game(stoi(elems[1].c_str()), stoi(elems[2].c_str()), sock, 0);
-            str = "msz";
-            write_server(sock, str);
-        }
         else
             manager(elems, game);
+        elems.clear();
     }
 
     if (sel == -1 || str == "none")
@@ -135,9 +138,6 @@ Game        *initGame(int ac, char **av)
         cout << "\033[31mServer error, can't receive informations.\033[0m" << endl;
         return (NULL);
     }
-    
-    str = "GRAPHIC\n";
-    write_server(sock, str);
     return (game);
 }
 
