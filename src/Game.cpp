@@ -17,6 +17,7 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <Render.h>
 
 using namespace std;
 
@@ -286,4 +287,9 @@ void Game::broadcast(vector<string> &str)
     }
     
     m_players[nb]->talk(msg);
+}
+
+void Game::win(string &team)
+{
+    Render::Win(team);
 }

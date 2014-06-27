@@ -40,6 +40,7 @@ class Render
     static void drawBroadcast(std::string msg);
     static void DrawEllipse(float radiusX, float radiusY);
     static void DrawPower(float radiusX, float radiusY, int color);
+    static void DrawWin(void);
     
     /****************************/
     /*        PROCESSING        */
@@ -56,6 +57,7 @@ class Render
     /*         OPTIONS          */
     /****************************/
     static void enableAA(void);
+    static void Win(std::string &team);
     
     /****************************/
     /*          RENDERS         */
@@ -112,6 +114,7 @@ class Render
     /* FLAGS */
     static int m_showInventory;
     static char m_showLines;
+    static std::string m_win;
 };
 
 class Camera
@@ -149,6 +152,7 @@ class Animation
     Animation(char state, float speed, float size, float xDelta, float yDelta, int color);
     void setTimeout(int timeout, int timeUnit);
     int CircleAnimation(void);
+    int levelUpAnimation(void);
 
     private:
     char m_state;

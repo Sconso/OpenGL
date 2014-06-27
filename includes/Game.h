@@ -60,6 +60,7 @@ class Game
     void expulse(std::vector<std::string> &str);
     void broadcast(std::vector<std::string> &str);
     void incantation(std::vector<std::string> &str);
+    void win(std::string &team);
     
     private:
     

@@ -21,6 +21,7 @@ m_nb(nb), m_x(x), m_y(y), m_orientation(orientation), m_level(level), m_team(tea
 {
     m_inventory = new Resources();
     m_animation = NULL;
+    m_animationFunct = NULL;
     cout << "Player n*" << nb << " successfully added on team " << team->getName() << endl;
 }
 
@@ -63,13 +64,20 @@ Animation *Player::getAnimation(void) const
 
 void Player::removeAnimation(void)
 {
-    delete m_animation;
-    m_animation = NULL;
+    if (m_animation != NULL)
+    {
+        delete m_animation;
+        m_animation = NULL;
+    }
 }
 
 int Player::doAnimation(void) const
 {
-    return (m_animation->CircleAnimation());
+    int ret(0);
+    
+    if (m_animationFunct != NULL)
+        ret = (m_animation->*m_animationFunct)();
+    return (ret);
 }
 
 string Player::getMsg(void) const
@@ -81,7 +89,6 @@ string Player::getTeam(void) const
 {
     return m_team->getName();
 }
-
 
 void Player::getPlayer() const
 {
@@ -106,6 +113,9 @@ int Player::getLevel(void) const
 
 void Player::setLevel(int level)
 {
+    removeAnimation();
+    m_animation = new Animation(3, 0.1, 10, 1, 1, 75);
+    m_animationFunct = &Animation::levelUpAnimation;
     m_level = level;
 }
 
@@ -132,9 +142,9 @@ void Player::starve(void)
 
 void Player::expulse(void)
 {
-    if (m_animation != NULL)
-        removeAnimation();
+    removeAnimation();
     m_animation = new Animation(3, 0.3, 1, 0.1, 0.3, 150);
+    m_animationFunct = &Animation::CircleAnimation;
 }
 
 void Player::talk(string &msg)
@@ -146,6 +156,8 @@ void Player::talk(string &msg)
 
 void Player::incantation(int timeUnit)
 {
+    removeAnimation();
     m_animation = new Animation(1, 0.3, 1, 0.1, 0.3, 75);
     m_animation->setTimeout(126, timeUnit);
+    m_animationFunct = &Animation::CircleAnimation;
 }

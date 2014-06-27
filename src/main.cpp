@@ -83,6 +83,8 @@ void        manager(vector<string> &msg, Game *game)
             game->removePlayer(msg);
         else if (msg[0] == "sgt")
             game->setTime(stoi(msg[1].c_str()));
+        else if (msg[0] == "seg")
+            game->win(msg[1]);
     }
     msg.clear();
 }

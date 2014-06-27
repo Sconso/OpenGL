@@ -54,6 +54,7 @@ class Player
     Team *m_team;
     Resources *m_inventory;
     Animation *m_animation;
+    int (Animation::*m_animationFunct)(void);
     
     std::string m_msg;
     int m_msgTimeout;

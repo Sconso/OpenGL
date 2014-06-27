@@ -54,6 +54,7 @@ int Render::mt_frame = 0;
 
 int Render::m_showInventory = -1;
 char Render::m_showLines = 1;
+string Render::m_win = "sconso";
 
 void Render::newWindow(int ac, char **av, int w, int h, string name, Game *game)
 {
@@ -141,10 +142,10 @@ void Render::renderScene(void)
     static int resZ = rand() % 200;
     
     ++i;
-    if (i == 1)
+    if (i == 100)
     {
         Player *p = m_game->getPlayer(6);
-        p->incantation(m_game->getTime());
+        p->setLevel(6);
     }
     
     askServer(m_game);
@@ -261,6 +262,9 @@ void Render::renderScene(void)
     
     restorePerspectiveProjection();
     glPopMatrix();
+    
+    if (m_win != "")
+        DrawWin();
     
     glFlush();
 	glutSwapBuffers();
@@ -492,6 +496,33 @@ void Render::DrawPower(float radiusX, float radiusY, int color)
     glLineWidth(1);
     
     glEnable(GL_CULL_FACE);
+}
+
+void Render::DrawWin(void)
+{
+    string msg = "WON !";
+    string team;
+//    int width = glutGet(GLUT_WINDOW_WIDTH);
+
+    glPushMatrix();
+
+    teamColor(m_win, -1);
+    
+    transform(m_win.begin(), m_win.end(), team.begin(), ::toupper);
+    
+    renderStrokeFontString(-(m_game->getWidth() / 2), 8, -(m_game->getHeight()), 0.05, 100, GLUT_STROKE_ROMAN, team);
+    renderStrokeFontString(-(m_game->getWidth() / 2), 2, -(m_game->getHeight()), 0.05, 100, GLUT_STROKE_ROMAN, msg);
+
+    
+//    renderBitmapString((width / 2) - (m_win.length() / 2), 50, GLUT_BITMAP_TIMES_ROMAN_24, m_win);
+//    renderBitmapString((width / 2) - (msg.length() / 2), 100, GLUT_BITMAP_TIMES_ROMAN_24, msg);
+
+    glPopMatrix();
+}
+
+void Render::Win(string &team)
+{
+    m_win = team;
 }
 
 void Render::mouseButton(int button, int state, int x, int y)
@@ -859,6 +890,41 @@ int Animation::CircleAnimation(void)
     if (xRadius >= m_size)
     {
         xRadius = yRadius = 0;
+        if (m_state == ONE_SHOT)
+            return (0);
+    }
+    return (1);
+}
+
+int Animation::levelUpAnimation(void)
+{
+    static float xRadius = m_xDelta;
+    static float yRadius = m_yDelta;
+    static string msg = "Level Up !";
+    
+    if (m_timeout > 0 && glutGet(GLUT_ELAPSED_TIME) >= m_timeout)
+        return (0);
+    if (m_state == BEGIN)
+    {
+        xRadius = m_xDelta;
+        yRadius = m_yDelta;
+    }
+    else if (m_state == STOP)
+    {
+        xRadius = m_xDelta;
+        yRadius = m_yDelta;
+        return (0);
+    }
+
+    glColor3ub(255, 0, 0);
+    Render::renderStrokeFontString(-(msg.length() / 11.5), yRadius, 0, 0.002, m_xDelta, GLUT_STROKE_ROMAN, msg);
+    
+    xRadius += m_xDelta * m_speed;
+    yRadius += m_yDelta * m_speed;
+    if (xRadius >= m_size)
+    {
+        xRadius = m_xDelta;
+        yRadius = m_yDelta;
         if (m_state == ONE_SHOT)
             return (0);
     }
