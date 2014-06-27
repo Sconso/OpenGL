@@ -170,6 +170,59 @@ void        askServer(Game *game)
     }
 }
 
+void        demo_mode(Game *game)
+{
+    vector<string> elems;
+    
+    game->setTime(100);
+
+    game->addTeam("sconso");
+    game->addTeam("gpetrov");
+    game->addTeam("ebaudet");
+    game->addTeam("wbeets");
+    
+    split("pnw #1 2 3 2 1 gpetrov", ' ', elems);
+    manager(elems, game);
+    split("pnw #2 14 5 1 5 gpetrov", ' ', elems);
+    manager(elems, game);
+    split("pnw #3 3 5 1 5 sconso", ' ', elems);
+    manager(elems, game);
+    split("pnw #4 2 4 2 5 sconso", ' ', elems);
+    manager(elems, game);
+    split("pnw #5 8 12 18 5 sconso", ' ', elems);
+    manager(elems, game);
+    split("pnw #6 10 13 2 1 ebaudet", ' ', elems);
+    manager(elems, game);
+    split("pnw #7 12 9 2 1 ebaudet", ' ', elems);
+    manager(elems, game);
+    split("pnw #8 2 15 2 1 ebaudet", ' ', elems);
+    manager(elems, game);
+    split("pnw #42 18 5 2 5 wbeets", ' ', elems);
+    manager(elems, game);
+
+    split("pin #1 245 4 5 1 3 5 1\n", ' ', elems);
+    manager(elems, game);
+    split("pin #2 620 1 3 6 8 5 1\n", ' ', elems);
+    manager(elems, game);
+    split("pin #3 20 9 7 3 5 3 2\n", ' ', elems);
+    manager(elems, game);
+    split("pin #4 2 8 5 11 2 56 2\n", ' ', elems);
+    manager(elems, game);
+    split("pin #5 142 4 5 2 7 9 3\n", ' ', elems);
+    manager(elems, game);
+    split("pin #6 69 4 4 7 3 5 6\n", ' ', elems);
+    manager(elems, game);
+    split("pin #7 19 1 2 3 4 5 6\n", ' ', elems);
+    manager(elems, game);
+    split("pin #8 79 6 5 4 3 2 1\n", ' ', elems);
+    manager(elems, game);
+    split("pin #42 463 4 2 1 6 3 1\n", ' ', elems);
+    manager(elems, game);
+    
+    
+}
+
+
 int			main(int ac, char **av)
 {
 	Game            *game = NULL;
@@ -184,54 +237,8 @@ int			main(int ac, char **av)
     if (!(game = initGame(ac, av)))
         return (-1);
 
-    game->setTime(100);
-    game->addTeam("sconso");
-    game->addTeam("gpetrov");
-    game->addTeam("ebaudet");
-    game->listTeams();
+    demo_mode(game);
 
-    split("lol #1 2 3 2 1 gpetrov", ' ', elems);
-    game->addPlayer(elems);
-    elems.clear();
-    split("lol #2 3 5 1 5 sconso", ' ', elems);
-    game->addPlayer(elems);
-    elems.clear();
-    split("lol #3 2 5 2 5 sconso", ' ', elems);
-    game->addPlayer(elems);
-    elems.clear();
-    split("lol #42 14 5 1 5 gpetrov", ' ', elems);
-    game->addPlayer(elems);
-    elems.clear();
-    split("lol #4 10 13 2 1 ebaudet", ' ', elems);
-    game->addPlayer(elems);
-    elems.clear();
-    split("lol #5 12 9 2 1 ebaudet", ' ', elems);
-    game->addPlayer(elems);
-    elems.clear();
-    split("lol #6 2 15 2 1 ebaudet", ' ', elems);
-    game->addPlayer(elems);
-    elems.clear();
-    
-  
-    game->listPlayers("sconso");
-    game->listPlayers("Blabokhfa");
-    game->listPlayers("LesConnards");
-
-    game->listPlayers(14, 5);
-    game->listPlayers(1, 4);
-
-    split("lol #42 1 4 2\n", ' ', elems);
-    game->movePlayer(elems);
-    elems.clear();
-
-    game->listPlayers(14, 5);
-    game->listPlayers(1, 4);
-    
-    split("lol #2 2 4 5 1 3 5 1\n", ' ', elems);
-    game->setInventory(elems);
-    elems.clear();
-    game->getInventory(2);
-    game->getInventory(3);
     
     split("bct 0 0 2 4 5 1 3 5 1\n", ' ', elems);
     if (elems[0] == "bct")
